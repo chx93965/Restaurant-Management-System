@@ -44,6 +44,84 @@ We will develop a full-stack web application using **Option B** from the archite
 
 The database will be designed to efficiently store restaurant-related data, including user roles, menus, orders, and financial transactions. Relationships will be structured to allow seamless data retrieval and management.
 
+### SQL Schema
+
+```sql
+CREATE TABLE users (
+    userId SERIAL PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    roleId INT NOT NULL,
+    CONSTRAINT fk_users_role FOREIGN KEY (roleId) REFERENCES roles(roleId) ON DELETE SET NULL
+);
+
+CREATE TABLE roles (
+    roleId SERIAL PRIMARY KEY,
+    roleName VARCHAR(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE operations (
+    operationId SERIAL PRIMARY KEY,
+    operationName VARCHAR(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE roleOperations (
+    roleId INT NOT NULL,
+    operationId INT NOT NULL,
+    PRIMARY KEY (roleId, operationId),
+    CONSTRAINT fk_role_operations_role FOREIGN KEY (roleId) REFERENCES roles(roleId) ON DELETE CASCADE,
+    CONSTRAINT fk_role_operations_operation FOREIGN KEY (operationId) REFERENCES operations(operationId) ON DELETE CASCADE
+);
+
+CREATE TABLE restaurants (
+    id SERIAL PRIMARY KEY,
+    restaurantName VARCHAR(255) NOT NULL,
+    address TEXT NOT NULL,
+    postcode VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE dishes (
+    id SERIAL PRIMARY KEY,
+    dishName VARCHAR(255) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    imageLocation TEXT
+);
+
+CREATE TABLE menus (
+    restaurantId INT NOT NULL,
+    dishId INT NOT NULL,
+    PRIMARY KEY (restaurantId, dishId),
+    CONSTRAINT fk_menus_restaurant FOREIGN KEY (restaurantId) REFERENCES restaurants(id) ON DELETE CASCADE,
+    CONSTRAINT fk_menus_dish FOREIGN KEY (dishId) REFERENCES dishes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE tables (
+    id SERIAL PRIMARY KEY,
+    size INT NOT NULL,
+    restaurantId INT NOT NULL,
+    CONSTRAINT fk_tables_restaurant FOREIGN KEY (restaurantId) REFERENCES restaurants(id) ON DELETE CASCADE
+);
+
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    restaurantId INT NOT NULL,
+    orderType VARCHAR(50) NOT NULL CHECK (orderType IN ('dine-in', 'takeout', 'delivery')),
+    tableId INT NULL,
+    CONSTRAINT fk_orders_restaurant FOREIGN KEY (restaurantId) REFERENCES restaurants(id) ON DELETE CASCADE,
+    CONSTRAINT fk_orders_table FOREIGN KEY (tableId) REFERENCES tables(id) ON DELETE SET NULL
+);
+
+CREATE TABLE orderItems (
+    id SERIAL PRIMARY KEY,
+    orderId INT NOT NULL,
+    dishId INT NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    price DECIMAL(10,2) NOT NULL,
+    CONSTRAINT fk_orderItems_order FOREIGN KEY (orderId) REFERENCES orders(id) ON DELETE CASCADE,
+    CONSTRAINT fk_orderItems_dish FOREIGN KEY (dishId) REFERENCES dishes(id) ON DELETE CASCADE
+);
+```
+
 ## File Storage Requirements
 
 The system will support file storage for:
