@@ -1,12 +1,11 @@
 # Restaurant Management Web Application
 
-## Project Proposal
+## Motivation
 
-### Motivation
+The restaurant industry in Toronto's downtown area is fast-paced. Apart from the food quality, the customer satisfaction primarily depends on the effectiveness and efficiency of restaurant services, especially the time and effort spent in ordering food, calling services, checking out, etc. Despite the growth of customer volume and the need for innovative technology, many restaurants still follow a traditional approach to manage customer orders, such as phone call reservations and pen-and-paper order taking. This outdated approach often causes issues like long waiting times, mismanaged reservations, order errors, and lack of streamlined communication between customers and staff. Additionally, restaurant managers face challenges in tracking cash flow and summarizing financial data without digitized balance sheets.
 
-Many restaurants still follow a traditional approach to managing their orders. For example, waiters and waitresses often write customer orders on small pieces of paper. This approach frequently leads to various issues: orders may be unclear, resulting in incorrect dishes being served, and there is no efficient way to track which dish belongs to which customer. Additionally, restaurant accountants face challenges in auditing daily cash flows due to the manual processes involved in generating balance sheets.
+We aim to introduce a new approach in restaurant management to improve the quality of customer services among the restaurant workflow by creating an integrated digital platform for clients, waitstaff, and managers. This application features fast and simplified table reservation, table status monitoring, and online order management. It also improves operational efficiency through cash flow tracking and performance reporting. There are similar applications like Uber Eats, which facilitate takeout orders, while this platform is designed to complement eat-in services in restaurants. 
 
-To address these challenges, we propose building a web application that enables restaurant owners to better manage daily operations, including order submission, cash flow tracking, and online order management. While similar platforms exist, such as Uber Eats, which facilitates takeout orders, they are not designed specifically for restaurant owners to efficiently manage both in-house and online orders.
 
 ## Objective and Key Features
 
