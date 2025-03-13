@@ -6,7 +6,7 @@
 
 Many restaurants still follow a traditional approach to managing their orders. For example, waiters and waitresses often write customer orders on small pieces of paper. This approach frequently leads to various issues: orders may be unclear, resulting in incorrect dishes being served, and there is no efficient way to track which dish belongs to which customer. Additionally, restaurant accountants face challenges in auditing daily cash flows due to the manual processes involved in generating balance sheets.
 
-To address these challenges, we propose building a web application that enables restaurant owners to better manage daily operations, including order submission, cash flow tracking, and online order management. While similar platforms exist, such as Uber Eats, which facilitates takeout orders, they are not designed specifically for restaurant owners to manage in-house and online orders efficiently.
+To address these challenges, we propose building a web application that enables restaurant owners to better manage daily operations, including order submission, cash flow tracking, and online order management. While similar platforms exist, such as Uber Eats, which facilitates takeout orders, they are not designed specifically for restaurant owners to efficiently manage both in-house and online orders.
 
 ## Objective and Key Features
 
@@ -15,30 +15,31 @@ The goal of this project is to develop a unified web application that simplifies
 ### Key Features
 
 #### User Authentication and Authorization
-- Each user will have a unique account.
+- Each user will have a unique account. Only the owner can update restaurant information and grant access to waiter/waitress accounts.
 - The restaurant owner will have permissions to modify the menu, generate balance sheets, and export data to PDF.
 - Waiters and waitresses will have permissions to place customer orders and generate bills.
 
 #### Menu Management
-- Update the menu by setting prices for each dish.
-- Upload images for each dish.
-- Upload a PDF version of the menu for customers to view.
+- The restaurant owner can create dishes, set prices, and update descriptions for each dish.
+- The restaurant owner can upload images for dishes. If no image is uploaded, a default image will be displayed.
+- A PDF version of the menu can be uploaded for customers to view.
+- The restaurant owner can create a layout by adding tables and specifying the size of each table.
 
 #### Order Management
-- Assign orders to specific table positions.
-- Apply discounts and coupons.
-- Generate customer bills efficiently.
+- Waiters/waitresses can place orders for customers by assigning dishes to each table.
+- Discounts and coupons can be applied to customer orders.
+- Waiters/waitresses can generate customer bills for each table and complete the dining process.
 
 #### Balance Sheet Management
-- Enter and track daily operational costs.
-- Upload and download receipts.
+- Track and enter daily operational costs.
+- Upload receipts to the system and download them as image files.
 - Automatically generate balance sheets and cash flow reports based on recorded orders.
 
 ## Technical Implementation
 
-We will develop a full-stack web application using **Option B** from the architecture design. 
+We will develop a full-stack web application using **Option B** from the architecture design. The system will be built with separate frontend and backend components, detailed below:
 - **Frontend:** React with Tailwind CSS for a modern and responsive user interface.
-- **Backend:** Express.js to implement a RESTful API for seamless communication between the client and server.
+- **Backend:** Express.js to implement a RESTful API for seamless communication between the client and server. The system will use a PostgreSQL database, and files will be uploaded to a specified location on the server.
 
 ## Database Schema and Relationships
 
@@ -125,7 +126,7 @@ CREATE TABLE orderItems (
 ## File Storage Requirements
 
 The system will support file storage for:
-- Uploading images of menu items.
+- Dish image uploads, menu PDF uploads, receipt uploads, and cash flow statement generation and downloads.
 - Uploading and downloading PDF versions of menus and balance sheets.
 
 This project aims to enhance restaurant management by providing a comprehensive digital solution, reducing human errors, and streamlining operations.
