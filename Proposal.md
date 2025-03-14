@@ -45,19 +45,19 @@ Menu item photos and promotional images
 #### Table Opening ( *** )
 - QR code scanning to automatically open and link the customer’s table to the app
 - Transition from reservation to table service
-- 
+
 #### Service Call ( ** )
 - In-app feature to call a waiter for service directly from the customer’s table
 - 
 #### Order Management ( *** )
 - Self-service ordering interface for food and beverage selection
 - Real-time order status tracking and modification
-- 
+
 #### Payment ( ** )
 - Flexible payment options pay immediately after ordering or pay later
 - Multiple payment methods credit card, member balance, and coupons
 - Options of merging multiple orders from the same table into a single bill
-- 
+
 #### Membership Center ( * )
 - One-click registration by scanning a QR code
 - Display of member balance, bonus credits, and points
