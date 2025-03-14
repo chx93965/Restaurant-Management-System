@@ -9,42 +9,140 @@ We aim to introduce a new approach in restaurant management to improve the quali
 
 ## Objective and Key Features
 
-The goal of this project is to develop a unified web application that simplifies daily restaurant operations. This system will help restaurant owners reduce manual effort by centralizing all essential functions in a single platform. It will also minimize errors and inefficiencies in order processing and financial management.
+The goal of this project is to develop a management system that handles and records daily restaurant operations. The system consists of three interconnected applications, including client-end, waiter-end, and manager-end, for the purpose of reducing human effort, digitizing paper works, minimizing errors, and improving efficiencies in order processing and financial management.
 
-### Key Features
+```
+*** must have
+**  should have
+*   nice to have
+```
 
-#### User Authentication and Authorization
-- Each user will have a unique account. Only the owner can update restaurant information and grant access to waiter/waitress accounts.
-- The restaurant owner will have permissions to modify the menu, generate balance sheets, and export data to PDF.
-- Waiters and waitresses will have permissions to place customer orders and generate bills.
+### General Features
+#### User Authentication and Authorization ( *** )
+- Unique user accounts with role-based access control
 
-#### Menu Management
-- The restaurant owner can create dishes, set prices, and update descriptions for each dish.
-- The restaurant owner can upload images for dishes. If no image is uploaded, a default image will be displayed.
-- A PDF version of the menu can be uploaded for customers to view.
-- The restaurant owner can create a layout by adding tables and specifying the size of each table.
 
-#### Order Management
-- Waiters/waitresses can place orders for customers by assigning dishes to each table.
-- Discounts and coupons can be applied to customer orders.
-- Waiters/waitresses can generate customer bills for each table and complete the dining process.
+### Client-End Application
 
-#### Balance Sheet Management
-- Track and enter daily operational costs.
-- Upload receipts to the system and download them as image files.
-- Automatically generate balance sheets and cash flow reports based on recorded orders.
+#### Restaurant Information Display ( * )
+- Display of restaurant location and contact information
+Menu item photos and promotional images
+- Announcements and news section for updates and special events
 
-## Technical Implementation
+#### Table Reservation ( *** )
+- Real-time table booking system with table selection interface
+- Option to provide reservation details and pay a deposit online
+- Confirmation notifications and reminders for reservations
+- Virtual waiting list for when all tables are occupied
+- Real-time updates on waiting status and estimated wait time
 
-We will develop a full-stack web application using **Option B** from the architecture design. The system will be built with separate frontend and backend components, detailed below:
-- **Frontend:** React with Tailwind CSS for a modern and responsive user interface.
-- **Backend:** Express.js to implement a RESTful API for seamless communication between the client and server. The system will use a PostgreSQL database, and files will be uploaded to a specified location on the server.
+#### Table Opening ( *** )
+- QR code scanning to automatically open and link the customer’s table to the app
+- Transition from reservation to table service
+- 
+#### Service Call ( ** )
+- In-app feature to call a waiter for service directly from the customer’s table
+- 
+#### Order Management ( *** )
+- Self-service ordering interface for food and beverage selection
+- Real-time order status tracking and modification
+- 
+#### Payment ( ** )
+- Flexible payment options pay immediately after ordering or pay later
+- Multiple payment methods credit card, member balance, and coupons
+- Options of merging multiple orders from the same table into a single bill
+- 
+#### Membership Center ( * )
+- One-click registration by scanning a QR code
+- Display of member balance, bonus credits, and points
+- Membership recharge options standard and package recharges
+- Membership levels with corresponding discount rates
 
-## Database Schema and Relationships
+#### Coupons and Vouchers ( * )
+- Product-specific coupons and general discount vouchers
+- Integration with third-party platforms for voucher redemption
+
+#### Takeaway Service ( * )
+- Option to place takeaway orders with delivery
+
+#### Points Shop ( * )
+- Redeem accumulated points for products, discounts, or third-party offerings
+
+
+### Waiter-End Application
+
+#### Real-Time Table Status ( *** )
+- Dashboard showing table occupancy status
+- Display of reservation details, order history, consumption amount, and payment status
+
+#### Reservation Management ( *** )
+- Manual reservation entry and status inquiries
+
+#### Table Operations ( *** )
+- Open, transfer, and clear tables
+
+#### Order Management ( *** )
+- Place and modify orders on behalf of customers
+
+#### Payment Processing ( ** )
+- Support for various payment methods, including credit card, member balance, and coupons
+
+#### Member Management ( * )
+- Recharge member accounts on behalf of customers
+
+#### Performance Reports ( ** )
+- Sales and service performance rankings
+- Order and revenue summary reports
+
+
+### Manager-End System
+
+#### Restaurant Management ( *** )
+- Display and manage restaurant information, including location, contact details, and promotional material
+- Manage and update staff accounts
+
+#### Staff Permissions Management ( *** )
+- Role-based access control for reservations, order management, and reports
+
+#### Inventory Management ( * )
+- Track warehouse stock and conduct cost analysis
+- Generate balance sheets for inventory management
+
+#### Product Management ( *** )
+- Add, categorize, and price menu items
+- Manage discounts and item availability
+- Upload images for cuisines 
+
+#### Order Management ( *** )
+- Track reservations, orders, and payment statuses
+- Upload and download receipts as image files
+
+#### Reports and Analysis ( ** )
+- Generate sales reports and revenue analysis
+
+#### Member Management ( * )
+- View and manage member data, balances, and transaction history
+
+
+### Technical Details
+
+We will develop a full-stack web application using **Option B** from the architecture design. The system will be built with separate frontend and backend components:
+#### Frontend
+- React with Tailwind CSS for a modern and responsive user interface
+#### Backend
+- Express.js with a RESTful API for client-server communication The system will use a
+- Frontend Next.js with responsive design and intuitive UI
+- Backend Express.js with RESTful APIs
+- Database PostgreSQL with normalized schema
+- Cloud storage AWS S3 for images and documents
+- External integrations of payment gateways, third-party voucher platforms
+
+
+#### Database Schema and Relationships
 
 The database will be designed to efficiently store restaurant-related data, including user roles, menus, orders, and financial transactions. Relationships will be structured to allow seamless data retrieval and management.
 
-### SQL Schema
+##### SQL Schema
 
 ```sql
 CREATE TABLE users (
@@ -122,7 +220,7 @@ CREATE TABLE orderItems (
 );
 ```
 
-## File Storage Requirements
+##### File Storage Requirements
 
 The system will support file storage for:
 - Dish image uploads, menu PDF uploads, receipt uploads, and cash flow statement generation and downloads.
