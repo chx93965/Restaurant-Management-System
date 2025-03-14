@@ -228,3 +228,66 @@ The system will support file storage for:
 
 This project aims to enhance restaurant management by providing a comprehensive digital solution, reducing human errors, and streamlining operations.
 
+
+## Tentative Plan
+
+The implementation will be collaborated among two developers, and the project is planned over five weeks. Responsibilities are as follows:
+
+| Week | Tasks                                                     |  
+|------|-----------------------------------------------------------|  
+| 1    | System architecture and database design                   |  
+| 2    | Backend API development                                   |  
+| 3    | Frontend development for client-end app                   |  
+| 4    | Frontend development for waiter and manager-end apps      |  
+| 5    | Integration, testing, and deployment                      |  
+
+### Week 1
+
+- **Hanxiao**
+    - Create and implement SQL database schema and operations
+
+- **Jingxian**
+    - Set up cloud storage for images and files
+
+### Week 2
+- **Hanxiao**
+    - Develop RESTful API endpoints for user authentication and authorization
+    - Implement order management API (placing orders, applying discounts, generating bills)
+
+- **Jingxian**
+    - Build API for menu management (CRUD operations for dishes, images, PDFs)
+    - Develop balance sheet management API (tracking costs, generating reports)
+
+### Week 3
+
+- **Hanxiao**
+    - Develop user authentication and registration interface
+    - Create order management interface for self-service ordering and order status tracking
+
+- **Jingxian**
+    - Implement table reservation and real-time waiting list features
+    - Implement QR code scanning for table opening and linking
+
+### Week 4
+
+- **Hanxiao**
+    - Build real-time table status dashboard for waiter-end app
+    - Create restaurant management interface for manager-end app (menu, staff management)
+
+- **Jingxian**
+    - Develop order management interface for waiters (placing and modifying orders)
+    - Implement performance reporting and balance sheet views for manager-end app
+
+### Week 5
+
+- **Hanxiao**
+    - Integrate frontend and backend components for all three applications
+    - Refine UI/UX and optimize performance
+    - Draft user guides
+
+- **Jingxian**
+    - Conduct unit and integration testing for API and frontend components
+    - Deploy system to cloud environment and configure database connections
+    - Prepare system documentation
+
+
