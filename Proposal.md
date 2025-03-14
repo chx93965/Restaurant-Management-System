@@ -1,5 +1,11 @@
 # Restaurant Management Web Application
 
+## Project Members
+| Name                     | Student Number | Email Address                    |
+|--------------------------|----------------|----------------------------------|
+| Jingxian Hou             |                |                                  |
+| Hanxiao Chang            | 1006341709     | Hanxiao.chang@mail.utoronto.ca   |
+
 ## Motivation
 
 The restaurant industry in Toronto's downtown area is fast-paced. Apart from the food quality, the customer satisfaction primarily depends on the effectiveness and efficiency of restaurant services, especially the time and effort spent in ordering food, calling services, checking out, etc. Despite the growth of customer volume and the need for innovative technology, many restaurants still follow a traditional approach to manage customer orders, such as phone call reservations and pen-and-paper order taking. This outdated approach often causes issues like long waiting times, mismanaged reservations, order errors, and lack of streamlined communication between customers and staff. Additionally, restaurant managers face challenges in tracking cash flow and summarizing financial data without digitized balance sheets.
