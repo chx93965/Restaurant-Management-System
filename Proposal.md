@@ -134,7 +134,7 @@ Menu item photos and promotional images
 
 We will develop a full-stack web application using **Option B** from the architecture design. The system will be built with separate frontend and backend components:
 #### Frontend
-- React with Tailwind CSS for a modern and responsive user interface
+- We will use React with Tailwind CSS for a modern and responsive user interface. Additionally, we will integrate shadcn/ui to enhance the frontend experience. The frontend will be highly responsive, allowing users to interact with the application to perform various realistic restaurant management operations
 #### Backend
 - Express.js with a RESTful API for client-server communication The system will use a
 - Frontend Next.js with responsive design and intuitive UI
@@ -142,6 +142,9 @@ We will develop a full-stack web application using **Option B** from the archite
 - PostgreSQL/SQLite3 database with normalized schema
 - Cloud storage AWS S3 for images and documents
 - External integrations of payment gateways, third-party voucher platforms
+#### Advanced Feature
+- We are going to implement authentication and authorization since the application allows users to create accounts to perform various actions based on the permission model.
+- The system also includes file handling and processing, such as menu and image uploads, as well as balance sheet downloads.
 
 
 #### Database Schema and Relationships
