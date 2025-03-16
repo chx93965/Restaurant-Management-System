@@ -2,15 +2,15 @@ const db = require('../config/db');
 
 // Create a new restaurant
 const createRestaurant = (req, res) => {
-    const { name, location } = req.body;
+    const { restaurantName, address, postCode } = req.body;
 
-    if (!name || !location) {
-        return res.status(400).json({ message: 'Name and location are required' });
+    if (!restaurantName || !address) {
+        return res.status(400).json({ message: 'restaurantName and address are required' });
     }
 
-    const query = `INSERT INTO restaurants (name, location) VALUES (?, ?)`;
+    const query = `INSERT INTO restaurants (restaurantName, address, postcode) VALUES (?, ?, ?)`;
 
-    db.run(query, [name, location], function (err) {
+    db.run(query, [restaurantName, address, postCode], function (err) {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Error creating restaurant' });
@@ -49,25 +49,28 @@ const getRestaurantById = (req, res) => {
 // Update restaurant details
 const updateRestaurant = (req, res) => {
     const { id } = req.params;
-    const { name, location } = req.body;
+    const { restaurantName, address, postCode } = req.body;
 
-    if (!name && !location) {
-        return res.status(400).json({ message: 'At least one field (name or location) must be provided for update' });
+    if (!restaurantName && !address && !postCode) {
+        return res.status(400).json({ message: 'restaurantName, address and postCode fields are required' });
     }
 
     let query = `UPDATE restaurants SET`;
     const params = [];
 
-    if (name) {
-        query += ` name = ?,`;
-        params.push(name);
+    if (restaurantName) {
+        query += ` restaurantName = ?,`;
+        params.push(restaurantName);
     }
-    if (location) {
-        query += ` location = ?,`;
-        params.push(location);
+    if (address) {
+        query += ` address = ?,`;
+        params.push(address);
     }
-
-    query = query.slice(0, -1); // Remove trailing comma
+    if (postCode) {
+        query += ` postCode = ?,`;
+        params.push(postCode);
+    }
+    query = query.slice(0, -1); 
     query += ` WHERE id = ?`;
     params.push(id);
 

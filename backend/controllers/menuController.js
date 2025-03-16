@@ -1,12 +1,33 @@
 const db = require('../config/db');
 
+
+const createDish = (req, res) => {
+    const { dishName, dishDescription, dishPrice, restaurantId } = req.body;
+    if (!dishName || !dishDescription || !dishPrice ) {
+        return res.status(400).json({ message: 'dishName, dishDescription, and dishPrice are required' });
+    }
+
+    const query = `
+        INSERT INTO dishes(dishName, dishDescription, price)
+        VALUES (?, ?, ?);
+    `;
+    db.run(query, [dishName, dishDescription, dishPrice ], function (err) {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Error creating Dishes' });
+        }
+        res.status(201).json({ id: this.lastID, dishName, dishPrice });
+    });
+};
+
+
 // Get all dishes for a specific restaurant
 const getMenuByRestaurant = (req, res) => {
     const { restaurantId } = req.params;
     const query = `
-        SELECT d.id, d.dishName, d.price, d.imageLocation 
+        SELECT d.id, d.dishName, d.dishDescription, d.price, d.imageLocation
         FROM menus m 
-        JOIN dishes d ON m.dishId = d.id 
+        INNER JOIN dishes d on m.dishId = d.id
         WHERE m.restaurantId = ?;
     `;
     db.all(query, [restaurantId], (err, rows) => {
@@ -50,5 +71,6 @@ const removeDishFromMenu = (req, res) => {
 module.exports = {
     getMenuByRestaurant,
     addDishToMenu,
-    removeDishFromMenu
+    removeDishFromMenu,
+    createDish,
 };
