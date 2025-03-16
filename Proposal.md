@@ -3,7 +3,7 @@
 ## Project Members
 | Name                     | Student Number | Email Address                    |
 |--------------------------|----------------|----------------------------------|
-| Jingxian Hou             |                |                                  |
+| Jingxian Hou             | 1001159710     | jingxian.hou@mail.utoronto.ca    |
 | Hanxiao Chang            | 1006341709     | Hanxiao.chang@mail.utoronto.ca   |
 
 ## Motivation
@@ -139,7 +139,7 @@ We will develop a full-stack web application using **Option B** from the archite
 - Express.js with a RESTful API for client-server communication The system will use a
 - Frontend Next.js with responsive design and intuitive UI
 - Backend Express.js with RESTful APIs
-- Database PostgreSQL with normalized schema
+- PostgreSQL/SQLite3 database with normalized schema
 - Cloud storage AWS S3 for images and documents
 - External integrations of payment gateways, third-party voucher platforms
 
