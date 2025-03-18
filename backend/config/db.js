@@ -65,6 +65,14 @@ db.serialize(() => {
         CONSTRAINT fk_owner_restaurant FOREIGN KEY (restaurantId) REFERENCES restaurants(id) ON DELETE CASCADE
     );
     `);
+    db.run(`
+        CREATE TABLE IF NOT EXISTS tables (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            size INTEGER NOT NULL CHECK (size > 0),
+            restaurantId INTEGER NOT NULL,
+            CONSTRAINT fk_tables_restaurant FOREIGN KEY (restaurantId) REFERENCES restaurants(id) ON DELETE CASCADE
+        );
+    `);
 });
 
 module.exports = db;
