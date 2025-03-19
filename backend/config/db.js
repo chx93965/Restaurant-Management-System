@@ -11,7 +11,6 @@ const db = new sqlite3.Database('./restaurant.db', sqlite3.OPEN_READWRITE | sqli
 
 // Create necessary tables if they don't exist
 db.serialize(() => {
-    // db.run(`DROP TABLE dishes;`);
     db.run(`CREATE TABLE IF NOT EXISTS menus (
         restaurantId INTEGER NOT NULL,
         dishId INTEGER NOT NULL,
@@ -44,6 +43,7 @@ db.serialize(() => {
         tableId INTEGER NULL,
         status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'completed')),
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        completedAt DATETIME,
         CONSTRAINT fk_orders_restaurant FOREIGN KEY (restaurantId) REFERENCES restaurants(id) ON DELETE CASCADE,
         CONSTRAINT fk_orders_table FOREIGN KEY (tableId) REFERENCES tables(id) ON DELETE SET NULL
     )`);
@@ -52,8 +52,6 @@ db.serialize(() => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         orderId INTEGER NOT NULL,
         dishId INTEGER NOT NULL,
-        quantity INTEGER NOT NULL CHECK (quantity > 0),
-        price DECIMAL(10,2) NOT NULL,
         CONSTRAINT fk_orderItems_order FOREIGN KEY (orderId) REFERENCES orders(id) ON DELETE CASCADE,
         CONSTRAINT fk_orderItems_dish FOREIGN KEY (dishId) REFERENCES dishes(id) ON DELETE CASCADE
     )`);
