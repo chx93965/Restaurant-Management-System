@@ -1,0 +1,46 @@
+.menu-container {
+    padding: 20px;
+}
+
+.menu-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.dishes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.dish {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.dish img {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    margin-bottom: 10px;
+}
+
+.dish input[type="file"] {
+    margin: 10px 0;
+}
+
+button {
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
