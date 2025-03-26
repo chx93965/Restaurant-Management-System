@@ -1,0 +1,36 @@
+.home-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.button-container {
+    margin-bottom: 20px;
+}
+
+.login-button, .signup-button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.login-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+}
+
+.signup-button {
+    background-color: #28a745;
+    color: white;
+}
+
+.signup-button:hover {
+    background-color: #1e7e34;
+}
