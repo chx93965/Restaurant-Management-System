@@ -1,8 +1,11 @@
-import React from 'react';
+import { useState} from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/home.css';
+import styles from '../styles/home.css';
 
-const Home = () => {
+function Home() {
+    console.log("Home component loaded!");
+    const [message, setMessage] = useState(null);
+
     return (
         <div className="home">
             <h1>Welcome to the Restaurant App</h1>

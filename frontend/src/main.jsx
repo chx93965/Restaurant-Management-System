@@ -3,28 +3,28 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./styles/app.css";
 
-import home from "./routes/home";
-import menu from "./routes/menu";
-import order from "./routes/order";
-import restaurant from "./routes/restaurant";
-import user from "./routes/user";
+import Home from "./routes/home";
+import Menu from "./routes/menu";
+import Order from "./routes/order";
+import Restaurant from "./routes/restaurant";
+import User from "./routes/user";
 
 
 const router = createBrowserRouter([
     {
-        path: "/", element: <home />
+        path: "/", element: <Home />
     },
     {
-        path: "/menu", element: <menu />
+        path: "/menu", element: <Menu />
     },
     {
-        path: "/order", element: <order />
+        path: "/order", element: <Order />
     },
     {
-        path: "/restaurant", element: <restaurant />
+        path: "/restaurant", element: <Restaurant />
     },
     {
-        path: "/user/:uid", element: <user />
+        path: "/user/:uid", element: <User />
     }
 ]);
 

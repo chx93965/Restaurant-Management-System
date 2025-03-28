@@ -1,6 +1,6 @@
 import React from 'react';
-import OrderForm from '../components/orderForm';
-import OrderList from '../components/orderList';
+import OrderForm from '../components/order/orderForm';
+import OrderList from '../components/order/orderList';
 
 const OrderPage = ({ restaurantId }) => {
     return (

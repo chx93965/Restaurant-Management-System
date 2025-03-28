@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { registerUser } from '../../services/user';
-import './user.css'; // Assuming you want to keep styles
+import '../../styles/userForm.css';
 
 const UserForm = () => {
     const [username, setUsername] = useState('');

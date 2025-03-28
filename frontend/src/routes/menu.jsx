@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getMenuByRestaurant, addDishToMenu, createDish, uploadImage } from '../services/menu';
-import './menu.css';
+import '../styles/menu.css';
 
 const Menu = ({ restaurantId }) => {
     const [dishes, setDishes] = useState([]);

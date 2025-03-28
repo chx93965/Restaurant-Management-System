@@ -1,6 +1,6 @@
 import React from 'react';
-import RestaurantForm from '../components/RestaurantForm';
-import RestaurantList from '../components/RestaurantList';
+import RestaurantForm from '../components/restaurant/restaurantForm';
+import RestaurantList from '../components/restaurant/restaurantList';
 import { useParams } from 'react-router-dom';
 
 const RestaurantPage = () => {
