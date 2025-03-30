@@ -12,8 +12,21 @@ function Home() {
         }
     }, []);
 
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+        setRole(null);
+    }
+
     return (
         <div className="home">
+            {/* Logout */}
+            {role && (
+                <div className="user-info">
+                    <span>Role: {role}</span>
+                    <button className="logout-btn" onClick={handleLogout}>Logout</button>
+                </div>
+            )}
+
             <h1>Welcome to the Restaurant App</h1>
             <p>Your one-stop solution to manage and explore restaurants!</p>
             <div className="home-buttons">

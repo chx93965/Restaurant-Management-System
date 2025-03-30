@@ -14,11 +14,13 @@ const UserPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // const user = await loginUser({ username, password });
-            // Mock user for debug
+            const user = await loginUser({ username, password });
+
+            /* Mock user for debug */
             // const user = { username, role: 'customer' };
             // const user = { username, role: 'staff' };
-            const user = { username, role: 'manager' };
+            // const user = { username, role: 'manager' };
+
             if (user) {
                 localStorage.setItem("user", JSON.stringify({ username, role }));
                 navigate('/'); // Redirect to Home
