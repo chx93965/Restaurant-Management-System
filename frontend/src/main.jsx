@@ -24,7 +24,7 @@ const router = createBrowserRouter([
         path: "/restaurant", element: <Restaurant />
     },
     {
-        path: "/user/:uid", element: <User />
+        path: "/user", element: <User />
     }
 ]);
 

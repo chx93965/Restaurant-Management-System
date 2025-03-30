@@ -10,9 +10,9 @@ import Main from './main';
 //     </React.StrictMode>
 // );
 
-ReactDOM.render(
-    <React.StrictMode>
-        <Main />
-    </React.StrictMode>,
-    document.getElementById('root')
-);
+// ReactDOM.render(
+//     <React.StrictMode>
+//         <Main />
+//     </React.StrictMode>,
+//     document.getElementById('root')
+// );
