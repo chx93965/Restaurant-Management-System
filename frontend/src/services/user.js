@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // TODO: define URL in config files
-const BACKEND_URL = 'http://localhost:5000/users';
+const BACKEND_URL = 'http://localhost:5000/api/users';
 
 // Register a new user
 export const registerUser = async ({ username, email, password, role }) => {

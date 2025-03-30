@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { createRestaurant, updateRestaurant } from '../../services/restaurant';
+import { useAuth } from "../../context/AuthContext";
 
 const RestaurantForm = ({ restaurantId, existingData }) => {
     const [restaurantName, setRestaurantName] = useState(existingData?.restaurantName || '');
     const [address, setAddress] = useState(existingData?.address || '');
     const [postCode, setPostCode] = useState(existingData?.postCode || '');
+    const { user } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('******');
+        console.log(user);
         if (restaurantId) {
             await updateRestaurant(restaurantId, { restaurantName, address, postCode });
         } else {
-            await createRestaurant({ restaurantName, address, postCode });
+            console.log('Creating restaurant with user ID:', user.id);
+            await createRestaurant({ restaurantName, address, postCode, ownerId: user.id });
         }
     };
 
