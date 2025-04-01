@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { getAllRestaurants } from '../../services/restaurant';
+import { useAuth } from "../../context/AuthContext";
 
 const RestaurantList = () => {
     const [restaurants, setRestaurants] = useState([]);
-
+    const { user } = useAuth();
     useEffect(() => {
+        console.log("User in RestaurantList:", user);
+        if (!user || !user.username) {
+            console.log("User is not yet available, skipping restaurant fetch.");
+            return;  // Exit early if user is not available
+        }
         const fetchRestaurants = async () => {
-            const fetchedRestaurants = await getAllRestaurants();
+            const fetchedRestaurants = await getAllRestaurants(user.username);
             setRestaurants(fetchedRestaurants);
         };
         fetchRestaurants();
-    }, []);
+    }, [user]);
 
     return (
         <div>

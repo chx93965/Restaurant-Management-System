@@ -1,21 +1,46 @@
 const db = require('../config/db');
+const fs = require('fs');
+
+const multer = require("multer");
+const path = require("path");
 
 // Create a new restaurant
 const createRestaurant = (req, res) => {
-    const { restaurantName, address, postCode } = req.body;
+    const { restaurantName, address, postCode, ownerId } = req.body;
 
-    if (!restaurantName || !address) {
-        return res.status(400).json({ message: 'restaurantName and address are required' });
+    // Check if required fields are provided
+    if (!restaurantName || !address || !ownerId) {
+        return res.status(400).json({ message: 'restaurantName, address, and ownerId are required' });
     }
 
-    const query = `INSERT INTO restaurants (restaurantName, address, postcode) VALUES (?, ?, ?)`;
+    // Start a transaction to ensure both restaurant and ownership are inserted
+    db.serialize(() => {
+        // Insert restaurant into the restaurants table
+        const restaurantQuery = `INSERT INTO restaurants (restaurantName, address, postcode) VALUES (?, ?, ?)`;
+        db.run(restaurantQuery, [restaurantName, address, postCode], function (err) {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: 'Error creating restaurant' });
+            }
 
-    db.run(query, [restaurantName, address, postCode], function (err) {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ message: 'Error creating restaurant' });
-        }
-        res.status(201).json({ restaurantId: this.lastID, message: 'Restaurant created successfully' });
+            // Get the last inserted restaurantId
+            const restaurantId = this.lastID;
+
+            // Insert into the restaurantOwners table to associate the owner with the restaurant
+            const ownershipQuery = `INSERT INTO restaurantOwners (restaurantId, userId) VALUES (?, ?)`;
+            db.run(ownershipQuery, [restaurantId, ownerId], function (err) {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ message: 'Error assigning ownership' });
+                }
+
+                // Send success response
+                res.status(201).json({
+                    restaurantId,
+                    message: 'Restaurant and ownership created successfully',
+                });
+            });
+        });
     });
 };
 
@@ -31,16 +56,24 @@ const getAllRestaurants = (req, res) => {
 };
 
 // Get a specific restaurant by ID
-const getRestaurantById = (req, res) => {
-    const { id } = req.params;
+const getRestaurantByUsername = (req, res) => {
+    const { username } = req.params;
 
-    db.get(`SELECT * FROM restaurants WHERE id = ?`, [id], (err, restaurant) => {
+    const query = `
+        SELECT r.*
+        FROM restaurants r
+        JOIN restaurantOwners ro ON r.id = ro.restaurantId
+        JOIN users u ON ro.userId = u.id
+        WHERE u.username = ?;
+    `;
+
+    db.get(query, [username], (err, restaurant) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Error fetching restaurant' });
         }
         if (!restaurant) {
-            return res.status(404).json({ message: 'Restaurant not found' });
+            return res.status(404).json({ message: 'No restaurant found for this user' });
         }
         res.json(restaurant);
     });
@@ -185,14 +218,112 @@ const getTablesByRestaurant = (req, res) => {
     });
 };
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads/Restaurant"); // Store images in 'uploads' folder
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+    if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error("Invalid file type. Only JPEG, JPG, and PNG are allowed."), false);
+    }
+};
+const upload = multer({ storage, fileFilter }).single('image');
+
+const uploadImage = (req, res) => {
+    const { restaurantId } = req.params; // Assuming restaurantId will be passed in the URL
+    upload(req, res, (err) => {
+        if (err) {
+            return res.status(400).json({ error: err.message });
+        }
+        if (!req.file) {
+            return res.status(400).json({ error: 'Please upload an image' });
+        }
+
+        // Save image path in the database
+        const imageUrl = `/uploads/Restaurant/${req.file.filename}`; // Update the path for restaurants
+        const query = `UPDATE restaurants SET imageLocation = ? WHERE id = ?`; // Update query for restaurants
+
+        db.run(query, [imageUrl, restaurantId], function (dbErr) {
+            if (dbErr) {
+                return res.status(500).json({ error: dbErr.message });
+            }
+            res.status(200).json({
+                message: 'Image uploaded successfully',
+                imageUrl: imageUrl
+            });
+        });
+    });
+};
+
+const downloadImage = (req, res) => {
+    const { restaurantId } = req.params; // Assuming restaurantId will be passed in the URL
+
+    // Retrieve image filename from database
+    const query = `SELECT imageLocation FROM restaurants WHERE id = ?`; // Query for restaurants
+
+    db.get(query, [restaurantId], (err, row) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+        if (!row || !row.imageLocation) {
+            return res.status(404).json({ error: 'Image not found' });
+        }
+
+        const imagePath = path.join(__dirname, '..', row.imageLocation); // Image path points to uploads/Restaurant/
+        console.log(imagePath)
+        // Check if file exists before attempting to send
+        if (!fs.existsSync(imagePath)) {
+            return res.status(404).json({ error: 'Image file not found on server' });
+        }
+
+        // Send the file for download
+        res.download(imagePath, row.imageLocation, (err) => {
+            if (err) {
+                res.status(500).json({ error: 'Error downloading image' });
+            }
+        });
+    });
+};
+
+
+const getImageUrl = (req, res) => {
+    const { restaurantId } = req.params;
+
+    // Retrieve image filename from database
+    const query = `SELECT imageLocation FROM restaurants WHERE id = ?`;
+
+    db.get(query, [restaurantId], (err, row) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+        if (!row || !row.imageLocation) {
+            return res.status(404).json({ error: 'Image not found' });
+        }
+
+        const imagePath = path.join(__dirname, '..', row.imageLocation); // Image path points to uploads/Restaurant/
+        return res.json({ imagePath });
+    });
+};
+
 module.exports = {
     createRestaurant,
     getAllRestaurants,
-    getRestaurantById,
+    getRestaurantByUsername,
     updateRestaurant,
     deleteRestaurant,
     createTablesForRestaurant,
     addTable,
     deleteTable,
-    getTablesByRestaurant
+    getTablesByRestaurant,
+    uploadImage,
+    getImageUrl,
+    downloadImage
 };

@@ -92,7 +92,6 @@ const upload = multer({ storage, fileFilter }).single('image');
 
 const uploadImage = (req, res) => {
     const { dishId } = req.params;
-    console.log('*************')
     upload(req, res, (err) => {
         if (err) {
             return res.status(400).json({ error: err.message });
