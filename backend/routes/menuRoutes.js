@@ -7,6 +7,6 @@ router.post('/', addDishToMenu);
 router.delete('/:restaurantId/:dishId', removeDishFromMenu);
 router.post('/dish', createDish);
 router.post('/:dishId/upload', uploadImage);
-router.post('/:dishId/download', downloadImage);
+router.get('/:dishId/download', downloadImage);
 
 module.exports = router;
