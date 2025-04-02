@@ -10,15 +10,15 @@ const createDish = (req, res) => {
     }
 
     const query = `
-        INSERT INTO dishes(dishName, dishDescription, price)
-        VALUES (?, ?, ?);
+        INSERT INTO dishes(dishName, dishDescription, price, imageLocation)
+        VALUES (?, ?, ?, '/uploads/Image/default.jpg');
     `;
-    db.run(query, [dishName, dishDescription, dishPrice ], function (err) {
+    db.run(query, [dishName, dishDescription, dishPrice, ], function (err) {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Error creating Dishes' });
         }
-        res.status(201).json({ id: this.lastID, dishName, dishPrice });
+        res.status(201).json({ id: this.lastID, dishName, dishDescription, dishPrice, imageLocation: '/uploads/Image/default.jpg' });
     });
 };
 

@@ -33,6 +33,12 @@ export const createTablesForRestaurant = async (restaurantId, tableSizes) => {
     return response.data;
 };
 
+export const deleteRestaurant = async (restaurantId) => {
+    const response = await axios.delete(`${apiUrl}/${restaurantId}`);
+    return response.data;
+};
+
+
 export const handleImageUpload = async (image, restaurantId, setUploading, setError) => {
     if (!image) {
         setError('Please select an image to upload.');
