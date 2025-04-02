@@ -110,7 +110,7 @@ const getOwnedRestaurants = (req, res) => {
     const { userId } = req.params; 
     // If restaurantId is provided, create an ownership entry
     const selectQuery = `
-        SELECT r.id, r.restaurantName, r.address, r.postcode
+        SELECT r.id, r.restaurantName, r.address, r.postcode, r.imageLocation
         FROM restaurants r
         JOIN restaurantOwners ro ON r.id = ro.restaurantId
         WHERE ro.userId = ?;

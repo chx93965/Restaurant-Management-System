@@ -17,7 +17,7 @@ function Home() {
         setUser(null); // Clear user from context
         localStorage.removeItem('user'); // Optionally, clear user from localStorage
     };
-
+    console.log(selectedRestaurant)
     return (
         <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-100">
             {/* Top-right Navigation */}
@@ -54,7 +54,7 @@ function Home() {
             <div className="mt-6 flex space-x-4">
                 <Link to="/menu" className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900">Menu</Link>
                 <Link to="/order" className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900">Order</Link>
-                {user && user.role === "manager" && (
+                {user && user.role === "owner" && (
                     <Link to="/restaurant" className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900">
                         Restaurant
                     </Link>
