@@ -48,7 +48,7 @@ Menu item photos and promotional images
 
 #### Service Call ( ** )
 - In-app feature to call a waiter for service directly from the customer’s table
-- 
+
 #### Order Management ( *** )
 - Self-service ordering interface for food and beverage selection
 - Real-time order status tracking and modification
@@ -136,9 +136,7 @@ We will develop a full-stack web application using **Option B** from the archite
 #### Frontend
 - We will use React with Tailwind CSS for a modern and responsive user interface. Additionally, we will integrate shadcn/ui to enhance the frontend experience. The frontend will be highly responsive, allowing users to interact with the application to perform various realistic restaurant management operations
 #### Backend
-- Express.js with a RESTful API for client-server communication The system will use a
-- Frontend Next.js with responsive design and intuitive UI
-- Backend Express.js with RESTful APIs
+- Express.js with a RESTful API for client-server communication
 - PostgreSQL/SQLite3 database with normalized schema
 - Cloud storage AWS S3 for images and documents
 - External integrations of payment gateways, third-party voucher platforms
