@@ -7,6 +7,7 @@ const Menu = () => {
     const { user, setUser, selectedRestaurant } = useAuth();
     const [uploading, setUploading] = useState(false); // State to track if the image is being uploaded
     const [error, setError] = useState(null); // State for handling errors
+    const [message, setMessage] = useState('');
 
     const [dishes, setDishes] = useState([]);
     const [newDish, setNewDish] = useState({
@@ -33,6 +34,7 @@ const Menu = () => {
     // Handle Dish Creation
     const handleCreateDish = async (e) => {
         e.preventDefault();
+        setMessage('');
         try {
             const dishCreated = await createDish(newDish); // Create dish
             dishCreated.price = dishCreated.dishPrice; // Set price to the created dish's price
@@ -40,8 +42,10 @@ const Menu = () => {
             await addDishToMenu(selectedRestaurant.id, dishCreated.id); // Add dish to menu
             setDishes((prevDishes) => [...prevDishes, dishCreated]); // Update state immediately
             setNewDish({ dishName: "", dishDescription: "", dishPrice: "" }); // Reset form
+            setMessage('Dish created successfully!');
         } catch (error) {
             console.error("Error creating dish:", error);
+            setMessage('Error creating dish: ' + error.message);
         }
     };
 
@@ -126,10 +130,10 @@ const Menu = () => {
                             {/* Display Image if Exists */}
                             {dish.imageLocation && (
                                 <img  src={`http://localhost:5000/api/menus/${dish.id}/download`}
-                                alt={dish.id} className="w-40 h-40 object-cover rounded-md mt-2" />
+                                      alt={dish.id} className="w-40 h-40 object-cover rounded-md mt-2" />
                             )}
 
-                       
+
                             {/* File Upload */}
                             <input
                                 type="file"

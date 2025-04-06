@@ -23,7 +23,22 @@ export const getOrders = async (restaurantId) => {
     return response.data;
 };
 
+export const getOrderById = async (orderId) => {
+    const response = await axios.get(`${apiUrl}/order/${orderId}`);
+    return response.data;
+};
+
 export const markOrderAsCompleted = async (orderId) => {
     const response = await axios.patch(`${apiUrl}/${orderId}/complete`);
+    return response.data;
+};
+
+export const removeItemFromOrder = async (orderId, itemId) => {
+    const response = await axios.delete(`${apiUrl}/${orderId}/item/${itemId}`);
+    return response.data;
+};
+
+export const deleteOrder = async (orderId) => {
+    const response = await axios.delete(`${apiUrl}/${orderId}`);
     return response.data;
 };
