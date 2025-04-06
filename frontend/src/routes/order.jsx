@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {useAuth} from "../context/AuthContext";
-import { getMenuByRestaurant} from "../services/menu";
-import { addOrder, deleteOrder, addItemsToOrder, removeItemFromOrder, getOrderById } from "../services/order";
+import { useAuth } from "../context/AuthContext";
+import { getMenuByRestaurant } from "../services/menu";
+import { addOrder, getOrders, addItemsToOrder, completeOrder } from "../services/order"; 
+import { getTablesByRestaurant } from "../services/restaurant";
 
 const OrderPage = ({ restaurantId }) => {
-    const { user, setUser, selectedRestaurant } = useAuth();
+    const { user, selectedRestaurant } = useAuth();
     const [menu, setMenu] = useState([]);
     const [quantities, setQuantities] = useState({});
     const [orderType, setOrderType] = useState('dine-in');
@@ -12,24 +13,41 @@ const OrderPage = ({ restaurantId }) => {
     const [submitting, setSubmitting] = useState(false);
     const [success, setSuccess] = useState(false);
     const [message, setMessage] = useState('');
+    const [tables, setTables] = useState([]);
+    const [pendingOrders, setPendingOrders] = useState([]);
 
     useEffect(() => {
-        const fetchMenu = async () => {
+        const fetchMenuAndOrders = async () => {
             if (selectedRestaurant) {
                 try {
-                    const data = await getMenuByRestaurant(selectedRestaurant.id);
-                    setMenu(data);
+                    const menuData = await getMenuByRestaurant(selectedRestaurant.id);
+                    setMenu(menuData);
+
                     const initialQuantities = {};
-                    data.forEach(dish => {
+                    menuData.forEach(dish => {
                         initialQuantities[dish.id] = 0;
                     });
                     setQuantities(initialQuantities);
+
+                    const orders = await getOrders(selectedRestaurant.id, 'pending');
+                    const pending = orders.filter(order => order.status === 'pending');
+                    console.log("Pending orders:", pending);
+                    setPendingOrders(pending);
                 } catch (error) {
-                    console.error("Error fetching menu:", error);
+                    console.error("Error fetching data:", error);
+                }
+            }
+
+            if (selectedRestaurant && orderType === 'dine-in') {
+                try {
+                    const data = await getTablesByRestaurant(selectedRestaurant.id);
+                    setTables(data);
+                } catch (error) {
+                    console.error("Error fetching tables:", error);
                 }
             }
         };
-        fetchMenu();
+        fetchMenuAndOrders();
     }, [restaurantId]);
 
     const updateQuantity = (dishId, delta) => {
@@ -51,6 +69,7 @@ const OrderPage = ({ restaurantId }) => {
     const hst = subtotal * HST_RATE;
     const totalPrice = subtotal + hst;
 
+    // Function to handle submitting an order
     const handleSubmit = async () => {
         if (orderType === 'dine-in' && !tableId) {
             alert('Please enter your table ID.');
@@ -65,19 +84,82 @@ const OrderPage = ({ restaurantId }) => {
 
         setSubmitting(true);
         setMessage('');
+        console.log('tableId:', tableId);
+        // Check if a pending order exists for the selected table
+        console.log("Pending orders:", pendingOrders);
+        const existingOrder = pendingOrders.find(order => order.tableId.toString() === tableId.toString());
+        console.log("Existing order:", existingOrder);
+        if (existingOrder) {
+            // If an existing order is found, add the new items to it
+            try {
+                console.log("Adding items to existing order:", existingOrder.orderId, dishes);
+                await addItemsToOrder(existingOrder.orderId, dishes); // Call an update function to add the new items
+                setMessage('Order updated successfully');
+                setSuccess(true);
+            } catch (error) {
+                console.error("Error updating order:", error);
+                setMessage('Failed to update order.');
+                setSuccess(false);
+            }
+        } else {
+            // If no existing order is found, create a new order
+            try {
+                await addOrder(selectedRestaurant.id, orderType, orderType === 'dine-in' ? tableId : null, dishes);
+                setMessage('Order submitted successfully');
+                setSuccess(true);
+            } catch (error) {
+                console.error("Error submitting order:", error);
+                setMessage('Failed to submit order.');
+                setSuccess(false);
+            }
+        }
 
         try {
-            await addOrder(selectedRestaurant.id, orderType, orderType === 'dine-in' ? tableId : null, dishes);
-            setMessage('Order submitted successfully');
-            setSuccess(true);
+            const orders = await getOrders(selectedRestaurant.id, 'pending');
+            const pending = orders.filter(order => order.status === 'pending');
+            setPendingOrders(pending); // Update the state with the fresh list of pending orders
         } catch (error) {
-            console.error("Error submitting order:", error);
-            setMessage('Failed to submit order.');
-            setSubmitting(false);
-            setSuccess(false);
+            console.error("Error refreshing pending orders:", error);
         }
 
         setSubmitting(false);
+    };
+
+    const groupOrdersByTable = (orders) => {
+        const groupedOrders = {};
+
+        orders.forEach(order => {
+            if (!groupedOrders[order.tableId]) {
+                groupedOrders[order.tableId] = {
+                    tableId: order.tableId,
+                    orderId: order.orderId,
+                    items: [],
+                };
+            }
+
+            // Merge items for the same tableId
+            groupedOrders[order.tableId].items = [
+                ...groupedOrders[order.tableId].items,
+                ...order.items,
+            ];
+        });
+
+        return Object.values(groupedOrders);
+    };
+
+    const handleCompleteOrder = async (orderId) => {
+        try {
+            await completeOrder(orderId); // Call the completeOrder function to mark the order as completed
+            setMessage('Order completed successfully');
+            setSuccess(true);
+            // Refresh the pending orders after completing one
+            const updatedOrders = await getOrders(selectedRestaurant.id, 'pending');
+            setPendingOrders(updatedOrders.filter(order => order.status === 'pending'));
+        } catch (error) {
+            console.error("Error completing order:", error);
+            setMessage('Failed to complete order.');
+            setSuccess(false);
+        }
     };
 
     return (
@@ -97,19 +179,60 @@ const OrderPage = ({ restaurantId }) => {
                 </select>
                 {orderType === 'dine-in' && (
                     <div className="mt-4">
-                        <label className="block text-gray-700">Table ID:</label>
-                        <input
-                            type="number"
+                        <label className="block text-gray-700">Table:</label>
+                        <select
                             value={tableId}
                             onChange={e => setTableId(e.target.value)}
-                            min={1}
-                            placeholder="Enter table ID"
+                            className="mt-2 p-2 border border-gray-300 rounded-md w-full"
                             required
-                            className="mt-2 p-2 border border-gray-300 rounded-md"
-                        />
+                        >
+                            <option value="">Select a table</option>
+                            {tables.map((table, index) => (
+                                <option key={index} value={table.id}>
+                                    {`Table #${index}`}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                 )}
             </div>
+
+            {/* Pending Orders Section */}
+            {pendingOrders.length > 0 && (
+                <div className="pending-orders mb-6">
+                    <h2 className="text-2xl font-semibold text-gray-800 mb-4">Pending Orders</h2>
+                    <ul className="space-y-3">
+                        {groupOrdersByTable(pendingOrders).map((order, index) => {
+                            // Calculate the total for each table
+                            const orderTotal = order.items.reduce((sum, item) => sum + item.price, 0);
+                            const tableIndex = tables.findIndex(table => table.id === order.tableId);
+                            const tableNumber = tableIndex >= 0 ? `Table #${tableIndex}` : 'Unknown Table'; // Display "Table #1", "Table #2", etc.
+                            return (
+                                <li key={index} className="border-b pb-4">
+                                    <div className="flex justify-between items-center">
+                                        <span>{tableNumber}</span> {/* Table Number */}
+                                        <span className="font-semibold text-green-600">${orderTotal.toFixed(2)}</span>
+                                    </div>
+                                    <ul className="mt-2">
+                                        {order.items.map((item, i) => (
+                                            <li key={i} className="flex justify-between">
+                                                <span>{item.dishName}</span>
+                                                <span className="text-gray-500">${item.price.toFixed(2)}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <button
+                                        onClick={() => handleCompleteOrder(order.orderId)}
+                                        className="mt-4 w-full bg-green-600 text-white font-semibold rounded-md hover:bg-green-700"
+                                    >
+                                        Complete Order
+                                    </button>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
+            )}
 
             <div className="menu-list mb-6">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-4">Menu</h2>
@@ -158,7 +281,6 @@ const OrderPage = ({ restaurantId }) => {
                                     <li key={dish.id} className="flex justify-between items-center border-b pb-2">
                                         <span>{dish.dishName}</span>
                                         <div className="flex items-center">
-
                                             <button
                                                 onClick={() => updateQuantity(dish.id, -1)}
                                                 disabled={quantities[dish.id] === 0}
@@ -181,24 +303,9 @@ const OrderPage = ({ restaurantId }) => {
                         <p className="mt-4">Subtotal: $ {subtotal.toFixed(2)}</p>
                         <p className="mt-1">HST (13%): $ {hst.toFixed(2)}</p>
                         <p className="mt-2 text-xl font-bold">Total: $ {totalPrice.toFixed(2)}</p>
-
-                        <button
-                            onClick={() => {
-                                const isConfirmed = window.confirm('Are you sure you want to clear the order?');
-                                if (isConfirmed) {
-                                    const cleared = {};
-                                    menu.forEach(dish => (cleared[dish.id] = 0));
-                                    setQuantities(cleared);
-                                }
-                            }}
-                            className="mt-4 w-full bg-gray-300 hover:bg-gray-400 text-black font-semibold py-2 rounded-md"
-                        >
-                            Clear Order
-                        </button>
                     </>
                 )}
             </div>
-
 
             <button
                 onClick={handleSubmit}
