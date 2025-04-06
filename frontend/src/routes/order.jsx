@@ -44,9 +44,12 @@ const OrderPage = ({ restaurantId }) => {
             .flatMap(([dishId, count]) => Array(count).fill({ dishId: parseInt(dishId) }));
     };
 
-    const totalPrice = menu.reduce((acc, dish) => {
+    const subtotal = menu.reduce((acc, dish) => {
         return acc + (dish.price * (quantities[dish.id] || 0));
     }, 0);
+    const HST_RATE = 0.13;
+    const hst = subtotal * HST_RATE;
+    const totalPrice = subtotal + hst;
 
     const handleSubmit = async () => {
         if (orderType === 'dine-in' && !tableId) {
@@ -111,62 +114,91 @@ const OrderPage = ({ restaurantId }) => {
             <div className="menu-list mb-6">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-4">Menu</h2>
                 {menu.map(dish => (
-                    <div key={dish.id} className="menu-item bg-gray-50 p-4 rounded-lg shadow-sm mb-4">
-                        {/* Image on the left */}
-                        {dish.imageLocation ? (
-                            <img
-                                src={`http://localhost:5000/api/menus/${dish.id}/download`}
-                                alt={dish.dishName}
-                                className="w-24 h-24 object-cover rounded-md"
-                            />
-                        ) : (
-                            <div className="w-24 h-24 bg-gray-200 rounded-md flex items-center justify-center text-sm text-gray-500">
-                                No Image
-                            </div>
-                        )}
+                    <button
+                        key={dish.id}
+                        onClick={() => {
+                            if (quantities[dish.id] === 0) {
+                                updateQuantity(dish.id, 1);
+                            }
+                        }}
+                        className={`w-full text-left p-4 mb-3 rounded-lg shadow-md flex justify-between items-center transition 
+                            ${quantities[dish.id] > 0 ? 'bg-gray-200 cursor-not-allowed' : 'bg-white hover:bg-green-100'}`}
+                    >
+                        <div>
+                            {dish.imageLocation ? (
+                                <img
+                                    src={`http://localhost:5000/api/menus/${dish.id}/download`}
+                                    alt={dish.dishName}
+                                    className="w-24 h-24 object-cover rounded-md"
+                                />
+                            ) : (
+                                <div className="w-24 h-24 bg-gray-200 rounded-md flex items-center justify-center text-sm text-gray-500">
+                                    No Image
+                                </div>
+                            )}
 
-                        {/* Text and buttons */}
-                        <div className="flex-1">
-                            <div className="flex justify-between items-center">
-                                <strong className="text-lg">{dish.dishName}</strong>
-                                <p className="text-gray-600">{dish.dishDescription}</p>
-                                <span className="text-green-600 font-bold">${dish.price.toFixed(2)}</span>
-                            </div>
-                            <div className="flex items-center mt-2">
-                                <button
-                                    onClick={() => updateQuantity(dish.id, -1)}
-                                    disabled={quantities[dish.id] === 0}
-                                    className="px-2 py-0.25 bg-white text-black font-bold rounded-md hover:bg-red-600"
-                                >
-                                    -
-                                </button>
-                                <span className="mx-4 text-xl">{quantities[dish.id]}</span>
-                                <button
-                                    onClick={() => updateQuantity(dish.id, 1)}
-                                    disabled={quantities[dish.id] >= 100}
-                                    className="px-2 py-0.25 bg-white text-black font-bold rounded-md hover:bg-green-600"
-                                >
-                                    +
-                                </button>
-                            </div>
+                            <strong className="text-lg">{dish.dishName}</strong>
+                            <p className="text-sm text-gray-600">{dish.dishDescription}</p>
                         </div>
-                    </div>
+                        <span className="text-green-600 font-bold">${dish.price.toFixed(2)}</span>
+                    </button>
                 ))}
             </div>
 
             <div className="order-summary mb-6">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-4">Your Order</h2>
-                <ul className="space-y-3">
-                    {menu
-                        .filter(dish => quantities[dish.id] > 0)
-                        .map(dish => (
-                            <li key={dish.id} className="text-lg">
-                                {dish.dishName} x {quantities[dish.id]} = ${(dish.price * quantities[dish.id]).toFixed(2)}
-                            </li>
-                        ))}
-                </ul>
-                <p className="mt-4 text-xl font-bold">Total: ${totalPrice.toFixed(2)}</p>
+                {Object.entries(quantities).filter(([_, qty]) => qty > 0).length === 0 ? (
+                    <p className="text-gray-500">No items selected yet.</p>
+                ) : (
+                    <>
+                        <ul className="space-y-3">
+                            {menu
+                                .filter(dish => quantities[dish.id] > 0)
+                                .map(dish => (
+                                    <li key={dish.id} className="flex justify-between items-center border-b pb-2">
+                                        <span>{dish.dishName}</span>
+                                        <div className="flex items-center">
+
+                                            <button
+                                                onClick={() => updateQuantity(dish.id, -1)}
+                                                disabled={quantities[dish.id] === 0}
+                                                className="px-2 py-0.25 bg-white text-black font-bold rounded-md hover:bg-red-600"
+                                            >
+                                                -
+                                            </button>
+                                            <span className="mx-3">{quantities[dish.id]}</span>
+                                            <button
+                                                onClick={() => updateQuantity(dish.id, 1)}
+                                                disabled={quantities[dish.id] >= 100}
+                                                className="px-2 py-0.25 bg-white text-black font-bold rounded-md hover:bg-green-600"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </li>
+                                ))}
+                        </ul>
+                        <p className="mt-4">Subtotal: $ {subtotal.toFixed(2)}</p>
+                        <p className="mt-1">HST (13%): $ {hst.toFixed(2)}</p>
+                        <p className="mt-2 text-xl font-bold">Total: $ {totalPrice.toFixed(2)}</p>
+
+                        <button
+                            onClick={() => {
+                                const isConfirmed = window.confirm('Are you sure you want to clear the order?');
+                                if (isConfirmed) {
+                                    const cleared = {};
+                                    menu.forEach(dish => (cleared[dish.id] = 0));
+                                    setQuantities(cleared);
+                                }
+                            }}
+                            className="mt-4 w-full bg-gray-300 hover:bg-gray-400 text-black font-semibold py-2 rounded-md"
+                        >
+                            Clear Order
+                        </button>
+                    </>
+                )}
             </div>
+
 
             <button
                 onClick={handleSubmit}
