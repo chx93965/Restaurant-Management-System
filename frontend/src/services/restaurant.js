@@ -21,9 +21,16 @@ export const getAllRestaurants = async (username) => {
     return response.data;
 };
 
+
+export const getTablesByRestaurant = async (restaurantId) => {
+    const res = await axios.get(`${apiUrl}/${restaurantId}/tables`);
+    console.log("Tables by restaurant:", res.data);
+    return res.data;
+};
+
 // Add a single table to a restaurant
-export const addTable = async (restaurantId, size) => {
-    const response = await axios.post(`${apiUrl}/${restaurantId}/tables/${size}`);
+export const addTable = async (restaurantId, tables) => {
+    const response = await axios.post(`${apiUrl}/${restaurantId}/tables/`, { tables });
     return response.data;
 };
 

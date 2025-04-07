@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { createRestaurant, updateRestaurant } from '../../services/restaurant';
+import { addTable, createRestaurant, updateRestaurant } from '../../services/restaurant';
 import { useAuth } from "../../context/AuthContext";
 
 const RestaurantForm = ({ restaurantId, existingData, onSuccess }) => {
     const [restaurantName, setRestaurantName] = useState(existingData?.restaurantName || '');
     const [address, setAddress] = useState(existingData?.address || '');
     const [postCode, setPostCode] = useState(existingData?.postCode || '');
+    const [seatsPerTable, setSeatsPerTable] = useState(existingData?.tables || []); // array like [2, 4, 2]
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
@@ -16,8 +17,34 @@ const RestaurantForm = ({ restaurantId, existingData, onSuccess }) => {
             setRestaurantName(existingData.restaurantName);
             setAddress(existingData.address);
             setPostCode(existingData.postCode);
+            setSeatsPerTable(existingData.tables || []);
         }
+        console.log("Existing Data:", existingData);
     }, [existingData]);
+
+    const handleTableCountChange = (e) => {
+        let tableCount = parseInt(e.target.value, 10);
+        if (isNaN(tableCount)) return;
+    
+        if (tableCount > 10) tableCount = 10; // <-- Enforce max in logic
+    
+        const updatedTables = [...seatsPerTable];
+        if (tableCount > updatedTables.length) {
+            for (let i = updatedTables.length; i < tableCount; i++) {
+                updatedTables.push(2);
+            }
+        } else {
+            updatedTables.length = tableCount;
+        }
+        setSeatsPerTable(updatedTables);
+    };
+    
+
+    const handleSeatChange = (index, value) => {
+        const updatedSeats = [...seatsPerTable];
+        updatedSeats[index] = parseInt(value, 10) || 0;
+        setSeatsPerTable(updatedSeats);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,16 +53,27 @@ const RestaurantForm = ({ restaurantId, existingData, onSuccess }) => {
         setSuccess(false);
 
         try {
+            const payload = {
+                restaurantName,
+                address,
+                postCode,
+                tables: seatsPerTable,
+            };
+
             if (restaurantId) {
-                await updateRestaurant(restaurantId, { restaurantName, address, postCode });
+                await updateRestaurant(restaurantId, payload);
             } else {
-                await createRestaurant({ restaurantName, address, postCode, ownerId: user.id });
+                const response = await createRestaurant({ ...payload, ownerId: user.id });
+                console.log("Created Restaurant:", response);
+                await addTable(response.restaurantId, seatsPerTable);
                 setRestaurantName('');
                 setAddress('');
                 setPostCode('');
+                setSeatsPerTable([]);
             }
+
             setSuccess(true);
-            if (onSuccess) onSuccess(); // Callback to refresh restaurant list
+            if (onSuccess) onSuccess();
         } catch (err) {
             setError('Failed to submit restaurant details.');
         } finally {
@@ -48,12 +86,12 @@ const RestaurantForm = ({ restaurantId, existingData, onSuccess }) => {
             <h2 className="text-2xl font-bold mb-4 text-center">
                 {restaurantId ? 'Update Restaurant' : 'Create a New Restaurant'}
             </h2>
-            
+
             {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
             {success && <p className="text-green-500 text-sm mb-3">Restaurant saved successfully!</p>}
-            
+
             <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Restaurant Name */}
+                {/* Basic Info */}
                 <div>
                     <label className="block text-gray-700 font-semibold mb-1">Restaurant Name</label>
                     <input
@@ -62,11 +100,8 @@ const RestaurantForm = ({ restaurantId, existingData, onSuccess }) => {
                         onChange={(e) => setRestaurantName(e.target.value)}
                         required
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                        placeholder="Enter restaurant name"
                     />
                 </div>
-
-                {/* Address */}
                 <div>
                     <label className="block text-gray-700 font-semibold mb-1">Address</label>
                     <input
@@ -75,11 +110,8 @@ const RestaurantForm = ({ restaurantId, existingData, onSuccess }) => {
                         onChange={(e) => setAddress(e.target.value)}
                         required
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                        placeholder="Enter address"
                     />
                 </div>
-
-                {/* Postcode */}
                 <div>
                     <label className="block text-gray-700 font-semibold mb-1">Postcode</label>
                     <input
@@ -87,11 +119,36 @@ const RestaurantForm = ({ restaurantId, existingData, onSuccess }) => {
                         value={postCode}
                         onChange={(e) => setPostCode(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                        placeholder="Enter postcode"
                     />
                 </div>
 
-                {/* Submit Button */}
+                {/* Tables */}
+                <div>
+                    <label className="block text-gray-700 font-semibold mb-1">Number of Tables</label>
+                    <input
+                        type="number"
+                        min="0"
+                        value={seatsPerTable.length}
+                        onChange={handleTableCountChange}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                        max="10"  // <-- Limit input UI
+                    />
+                </div>
+
+                {seatsPerTable.map((seats, index) => (
+                    <div key={index}>
+                        <label className="block text-gray-600 text-sm mb-1">Seats for Table {index + 1}</label>
+                        <input
+                            type="number"
+                            min="1"
+                            value={seats}
+                            onChange={(e) => handleSeatChange(index, e.target.value)}
+                            className="w-full p-2 border border-gray-300 rounded-md"
+                        />
+                    </div>
+                ))}
+
+                {/* Submit */}
                 <button
                     type="submit"
                     className={`w-full py-2 rounded-lg font-semibold text-white transition duration-200 ${
