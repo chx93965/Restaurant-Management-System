@@ -35,7 +35,7 @@ function Home() {
                 ) : (
                     <div className="flex space-x-2">
                         <Link to="/login" className="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600">Login</Link>
-                        <Link to="/signup" className="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600">Sign Up</Link>
+                        <Link to="/register" className="px-3 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600">Sign Up</Link>
                     </div>
                 )}
             </div>
