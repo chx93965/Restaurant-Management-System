@@ -5,6 +5,7 @@ import RestaurantList from '../components/restaurant/restaurantList';
 import { useParams } from 'react-router-dom';
 import { getOwnedRestaurants } from '../services/user';
 import { useAuth } from '../context/AuthContext';
+import Navbar from "../components/navBar";
 
 const RestaurantPage = () => {
     const { id } = useParams();
@@ -37,17 +38,21 @@ const RestaurantPage = () => {
     }, [user]); // Fetch when user changes
 
     return (
-        <div className="p-6">
-            <h1 className="text-3xl font-bold mb-4">Restaurant Management</h1>
+        <div className="pt-20 min-h-screen bg-gray-100 py-10 px-6">
+            <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+                <Navbar />
 
-            {/* Form for Creating/Updating Restaurants */}
-            <RestaurantForm
-                restaurantId={restaurantId}
-                onSuccess={fetchRestaurants} // Refresh list after creation
-            />
+                <h1 className="text-3xl font-bold mb-4">Restaurant Management</h1>
 
-            {/* Restaurant List */}
-            <RestaurantList restaurants={restaurants} setRestaurants={setRestaurants} />
+                {/* Form for Creating/Updating Restaurants */}
+                <RestaurantForm
+                    restaurantId={restaurantId}
+                    onSuccess={fetchRestaurants} // Refresh list after creation
+                />
+
+                {/* Restaurant List */}
+                <RestaurantList restaurants={restaurants} setRestaurants={setRestaurants} />
+            </div>
         </div>
     );
 };

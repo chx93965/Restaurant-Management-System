@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getMenuByRestaurant, addDishToMenu, createDish, imageUpload, deleteDish } from "../services/menu";
-import { useAuth } from '../context/AuthContext'; // Import the useAuth hook
+import { useAuth } from '../context/AuthContext';
+import Navbar from "../components/navBar"; // Import the useAuth hook
 
 
 const Menu = () => {
@@ -90,9 +91,11 @@ const Menu = () => {
 
 
     return (
-        <div className="min-h-screen bg-gray-100 py-10 px-6">
+        <div className="pt-20 min-h-screen bg-gray-100 py-10 px-6">
+            <Navbar />
+
             <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Restaurant Menu</h2>
+                <h2 className="text-3xl font-bold mb-4">Restaurant Menu</h2>
 
                 {/* Dish Creation Form */}
                 <form onSubmit={handleCreateDish} className="bg-gray-50 p-4 rounded-md shadow">
