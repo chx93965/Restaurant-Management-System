@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import { handleImageUpload, deleteRestaurant } from '../../services/restaurant';
+import { allCompletedOrder } from '../../services/order';
 
 const RestaurantList = ({ restaurants, setRestaurants, loading, error }) => {
     const { user, selectedRestaurant, setSelectedRestaurant } = useAuth();
@@ -9,7 +10,9 @@ const RestaurantList = ({ restaurants, setRestaurants, loading, error }) => {
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [tableLayouts, setTableLayouts] = useState({}); // For storing table data per restaurant
-
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [balanceSheet, setBalanceSheet] = useState(null);
+    const [loadingBalance, setLoadingBalance] = useState(false);
     useEffect(() => {
         if (!user || !user.username) {
             navigate('/login');
@@ -64,6 +67,62 @@ const RestaurantList = ({ restaurants, setRestaurants, loading, error }) => {
         } catch (error) {
             console.error("Error removing restaurant:", error);
         }
+    };
+    const generateBalanceSheetForRestaurant = async (restaurant) => {
+        setLoadingBalance(true);
+        setBalanceSheet(null);
+    
+        const csvRows = [];
+    
+        // Add CSV header
+        csvRows.push([
+            'Restaurant Name',
+            'Order ID',
+            'Order Type',
+            'Status',
+            'Date',
+            'Dish Name',
+            'Dish Price',
+            'Order Total'
+        ].join(','));
+    
+        try {
+            const data = await allCompletedOrder(restaurant.id, selectedYear);
+    
+            for (const order of data) {
+                const orderTotal = order.items.reduce((sum, item) => sum + item.price, 0);
+    
+                for (const item of order.items) {
+                    csvRows.push([
+                        `"${restaurant.restaurantName}"`,
+                        order.orderId,
+                        order.orderType,
+                        order.status,
+                        order.createdAt,
+                        `"${item.dishName.trim()}"`,
+                        item.price.toFixed(2),
+                        orderTotal.toFixed(2)
+                    ].join(','));
+                }
+            }
+    
+            // Download the CSV
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv' });
+    
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `balance_sheet_${restaurant.restaurantName}_${selectedYear}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+    
+        } catch (err) {
+            console.error(`Failed to fetch orders for restaurant ${restaurant.id}`, err);
+        }
+    
+        setLoadingBalance(false);
     };
 
     return (
@@ -143,6 +202,24 @@ const RestaurantList = ({ restaurants, setRestaurants, loading, error }) => {
                             >
                                 {selectedRestaurant?.id === restaurant.id ? 'Selected' : 'Select'}
                             </button>
+                            <div className="mb-6 flex items-center gap-4 justify-center">
+                                <label className="text-gray-700 font-medium">Year:</label>
+                                <input
+                                    type="number"
+                                    value={selectedYear}
+                                    onChange={(e) => setSelectedYear(Number(e.target.value))}
+                                    className="border border-gray-300 rounded px-3 py-1 w-28"
+                                    placeholder="e.g., 2024"
+                                    min="2000"
+                                    max={new Date().getFullYear()}
+                                />
+                                <button
+                                    onClick={() => generateBalanceSheetForRestaurant(restaurant)}
+                                    className="mt-2 w-full py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                                >
+                                    Download Balance Sheet
+                                </button>
+                            </div>
 
                             {/* Remove Button */}
                             <button

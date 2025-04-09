@@ -96,7 +96,7 @@ const removeItemFromOrder = (req, res) => {
 
 // Get all orders
 const getOrders = (req, res) => {
-    const { restaurantId, status } = req.params;
+    const { restaurantId, status, year } = req.params;
 
     let query = `
         SELECT o.id AS orderId, o.restaurantId, o.orderType, o.tableId, o.status, o.createdAt,
@@ -113,7 +113,11 @@ const getOrders = (req, res) => {
         query += ` AND o.status = ?`;
         queryParams.push(status);
     }
-
+    
+    if (year) {
+        query += ` AND strftime('%Y', o.createdAt) = ?`;
+        queryParams.push(year);
+    }
     db.all(query, queryParams, (err, rows) => {
         if (err) {
             console.error("Error fetching orders:", err.message);

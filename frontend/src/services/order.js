@@ -23,6 +23,11 @@ export const completeOrder = async (orderId) => {
     return response.data;
 };
 
+export const allCompletedOrder = async (resaurantId, year) => {
+    const response = await axios.get(`${apiUrl}/${resaurantId}/completed/${year}`);
+    return response.data;
+};
+
 
 export const getOrders = async (restaurantId, status) => {
     const response = await axios.get(`${apiUrl}/${restaurantId}/${status}`);
