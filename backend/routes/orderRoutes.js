@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post('/', addOrder);
 router.post('/:orderId/items', addItemsToOrder);
-router.get("/:restaurantId/:status", getOrders);
+router.get("/:restaurantId/:status/:year", getOrders);
 router.get('/:id', getOrderById);
 router.patch('/:orderId/complete', markOrderAsCompleted);
 router.delete('/:orderId', deleteOrder);
