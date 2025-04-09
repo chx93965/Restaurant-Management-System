@@ -150,14 +150,14 @@ const OrderPage = ({ restaurantId }) => {
     const handleCompleteOrder = async (orderId) => {
         try {
             await completeOrder(orderId); // Call the completeOrder function to mark the order as completed
-            setMessage('Order completed successfully');
+            setMessage('Order completed');
             setSuccess(true);
             // Refresh the pending orders after completing one
             const updatedOrders = await getOrders(selectedRestaurant.id, 'pending');
             setPendingOrders(updatedOrders.filter(order => order.status === 'pending'));
         } catch (error) {
             console.error("Error completing order:", error);
-            setMessage('Failed to complete order.');
+            setMessage('Failed to complete order');
             setSuccess(false);
         }
     };
@@ -189,7 +189,7 @@ const OrderPage = ({ restaurantId }) => {
                             <option value="">Select a table</option>
                             {tables.map((table, index) => (
                                 <option key={index} value={table.id}>
-                                    {`Table #${index}`}
+                                    {`Table #${index + 1}`}
                                 </option>
                             ))}
                         </select>
@@ -198,15 +198,17 @@ const OrderPage = ({ restaurantId }) => {
             </div>
 
             {/* Pending Orders Section */}
-            {pendingOrders.length > 0 && (
+            {pendingOrders.length > 0 && (user.role === "owner" || user.role === "server") && (
                 <div className="pending-orders mb-6">
                     <h2 className="text-2xl font-semibold text-gray-800 mb-4">Pending Orders</h2>
                     <ul className="space-y-3">
                         {groupOrdersByTable(pendingOrders).map((order, index) => {
                             // Calculate the total for each table
                             const orderTotal = order.items.reduce((sum, item) => sum + item.price, 0);
+                            const orderTax = orderTotal * HST_RATE;
                             const tableIndex = tables.findIndex(table => table.id === order.tableId);
-                            const tableNumber = tableIndex >= 0 ? `Table #${tableIndex}` : 'Unknown Table'; // Display "Table #1", "Table #2", etc.
+                            // Display "Table #1", "Table #2", etc.
+                            const tableNumber = tableIndex >= 0 ? `Table #${tableIndex}` : 'Unknown Table';
                             return (
                                 <li key={index} className="border-b pb-4">
                                     <div className="flex justify-between items-center">
@@ -220,6 +222,10 @@ const OrderPage = ({ restaurantId }) => {
                                                 <span className="text-gray-500">${item.price.toFixed(2)}</span>
                                             </li>
                                         ))}
+                                        <li key="hst" className="flex justify-between">
+                                            <span>HST (13%): </span>
+                                            <span className="text-gray-500">${orderTax.toFixed(2)}</span>
+                                        </li>
                                     </ul>
                                     <button
                                         onClick={() => handleCompleteOrder(order.orderId)}

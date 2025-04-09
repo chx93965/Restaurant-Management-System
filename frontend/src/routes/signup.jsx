@@ -71,7 +71,7 @@ const Signup = () => {
                             <option value="customer">Customer</option>
                         </select>
 
-                        {role !== "customer" && (
+                        {(role === "owner" || role === "server") && (
                             <div className="mb-4">
                                 <label htmlFor="token" className="block text-gray-700 font-medium">Token</label>
                                 <input

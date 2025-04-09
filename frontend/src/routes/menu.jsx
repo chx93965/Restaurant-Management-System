@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getMenuByRestaurant, addDishToMenu, createDish, imageUpload, deleteDish } from "../services/menu";
 import { useAuth } from '../context/AuthContext'; // Import the useAuth hook
 
@@ -16,8 +17,15 @@ const Menu = () => {
         dishPrice: "",
     });
     const [file, setFile] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
+        // authorization
+        if (user.role !== "owner") {
+            alert("Unauthorized access");
+            navigate("/");
+        }
+
         if (selectedRestaurant) {
             const fetchMenu = async () => {
                 try {

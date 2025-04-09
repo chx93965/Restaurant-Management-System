@@ -74,7 +74,7 @@ function UserProfile() {
                 <p className="text-gray-600">Email: {user.email}</p>
             </div>
 
-            <div>
+            {user.role === "owner" && (<div>
                 <h3 className="text-lg font-semibold mb-2">Restaurants Owned:</h3>
                 {restaurants.length > 0 ? (
                     <ul className="list-disc pl-6">
@@ -103,9 +103,10 @@ function UserProfile() {
                     <p className="text-gray-600">You don't own any restaurants yet.</p>
                 )}
             </div>
+            )}
 
             {/* Display selected restaurant details */}
-            {selectedRestaurant && (
+            {user.role === "owner" && selectedRestaurant && (
                 <div className="mt-4">
                     <h3 className="text-lg font-semibold mb-2">Selected Restaurant:</h3>
                     <div className="text-gray-700">
@@ -117,7 +118,7 @@ function UserProfile() {
             )}
 
             {/* Image Upload */}
-            {selectedRestaurant && (
+            {user.role === "owner" && selectedRestaurant && (
                 <div className="mt-6">
                     <h3 className="text-lg font-semibold mb-2">Upload Restaurant Image:</h3>
                     <input

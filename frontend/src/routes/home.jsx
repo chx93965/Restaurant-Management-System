@@ -52,7 +52,9 @@ function Home() {
             )}
 
             <div className="mt-6 flex space-x-4">
-                <Link to="/menu" className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900">Menu</Link>
+                {user && user.role === "owner" && (
+                    <Link to="/menu" className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900">Menu</Link>
+                )}
                 <Link to="/order" className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900">Order</Link>
                 {user && user.role === "owner" && (
                     <Link to="/restaurant" className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900">

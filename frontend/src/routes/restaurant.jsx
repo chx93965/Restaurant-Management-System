@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import RestaurantForm from '../components/restaurant/restaurantForm';
 import RestaurantList from '../components/restaurant/restaurantList';
 import { useParams } from 'react-router-dom';
@@ -9,6 +10,7 @@ const RestaurantPage = () => {
     const { id } = useParams();
     const restaurantId = id ? parseInt(id, 10) : null;
     const { user } = useAuth();
+    const navigate = useNavigate();
 
     // State to store restaurants
     const [restaurants, setRestaurants] = useState([]);
@@ -25,6 +27,12 @@ const RestaurantPage = () => {
     };
 
     useEffect(() => {
+        // authorization
+        if (user.role !== "owner") {
+            alert("Unauthorized access");
+            navigate("/");
+        }
+
         fetchRestaurants();
     }, [user]); // Fetch when user changes
 
