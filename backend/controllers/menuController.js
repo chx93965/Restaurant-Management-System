@@ -22,6 +22,38 @@ const createDish = (req, res) => {
     });
 };
 
+const updateDish = (req, res) => {
+    const dishId = req.params.dishId;
+    const { dishName, dishDescription, dishPrice } = req.body;
+
+    if (!dishName || !dishDescription || dishPrice == null) {
+        return res.status(400).json({ message: 'dishName, dishDescription, and dishPrice are required' });
+    }
+
+    const query = `
+        UPDATE dishes
+        SET dishName = ?, dishDescription = ?, price = ?
+        WHERE id = ?;
+    `;
+
+    db.run(query, [dishName, dishDescription, dishPrice, dishId], function (err) {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Error updating dish' });
+        }
+
+        if (this.changes === 0) {
+            return res.status(404).json({ message: 'Dish not found' });
+        }
+
+        res.status(200).json({
+            id: dishId,
+            dishName,
+            dishDescription,
+            dishPrice
+        });
+    });
+};
 
 // Get all dishes for a specific restaurant
 const getMenuByRestaurant = (req, res) => {
@@ -152,5 +184,6 @@ module.exports = {
     removeDishFromMenu,
     createDish,
     uploadImage,
-    downloadImage
+    downloadImage,
+    updateDish
 };

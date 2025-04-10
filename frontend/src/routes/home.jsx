@@ -9,6 +9,7 @@ function Home() {
 
     // Fetch restaurant image when a restaurant is selected
     useEffect(() => {
+        console.log("Selected restaurant:", localStorage); // Log the selected restaurant for debugging
         if (selectedRestaurant) {
             setRestaurantImage(`http://localhost:5000/api/restaurants/${selectedRestaurant.id}/download`); // Reset image state before fetching new one
         }
@@ -16,9 +17,9 @@ function Home() {
 
     const handleLogout = () => {
         setUser(null); // Clear user from context
-        localStorage.removeItem('user'); // Optionally, clear user from localStorage
+        setSelectedRestaurant(null);
+        localStorage.clear();
     };
-    console.log(selectedRestaurant)
     return (
         <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-100">
             <Navbar />

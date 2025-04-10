@@ -4,6 +4,8 @@ import { getMenuByRestaurant } from "../services/menu";
 import { addOrder, getOrders, addItemsToOrder, completeOrder } from "../services/order"; 
 import { getTablesByRestaurant } from "../services/restaurant";
 import Navbar from "../components/navBar";
+import { useNavigate } from 'react-router-dom'; // For redirection
+
 
 const OrderPage = ({ restaurantId }) => {
     const { user, selectedRestaurant } = useAuth();
@@ -16,8 +18,15 @@ const OrderPage = ({ restaurantId }) => {
     const [message, setMessage] = useState('');
     const [tables, setTables] = useState([]);
     const [pendingOrders, setPendingOrders] = useState([]);
+    const navigate = useNavigate(); // Hook to navigate to different pages
 
     useEffect(() => {
+        if (!user) {
+            // Redirect to login if no user is found in context
+            navigate('/login');
+            return;
+        }
+
         const fetchMenuAndOrders = async () => {
             if (selectedRestaurant) {
                 try {

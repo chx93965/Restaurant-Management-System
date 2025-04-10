@@ -32,7 +32,10 @@ export const uploadImage = async (dishId, file) => {
     });
     return response.data;
 };
-
+export const updateDish = async (dishId, dishData) => {
+    const response = await axios.put(`${BACKEND_URL}/${dishId}`, dishData);
+    return response.data;
+};
 export const imageUpload = async (dishId, image, setUploading, setError) => {
     if (!image) {
         setError('Please select an image to upload.');

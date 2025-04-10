@@ -29,3 +29,10 @@ export const getOwnedRestaurants = async (userId) => {
     return response.data.message;
 };
 
+export const updateUserProfile = async (userId, formData) => {
+    console.log(formData);
+
+    const response = await axios.put(`${BACKEND_URL}/${userId}`, formData);
+    console.log(response.data);
+    return response.data;
+};

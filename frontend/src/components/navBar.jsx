@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-    const { user, setUser } = useAuth();
+    const { user, setUser, setSelectedRestaurant } = useAuth();
+    const navigate = useNavigate();
 
     const handleLogout = () => {
         setUser(null);
-        localStorage.removeItem("user");
+        setSelectedRestaurant(null); // Assuming you have a setSelectedRestaurant function in your context
+        localStorage.clear();
+        navigate("/");
+
     };
 
     return (
@@ -14,6 +19,7 @@ const Navbar = () => {
             <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                 <div className="text-xl font-semibold text-gray-800">Restaurant App</div>
                 <div className="flex items-center space-x-4">
+                    <Link to="/" className="px-4 py-2 bg-white text-blue-900 rounded font-bold hover:bg-gray-100">Home</Link>
                     {user && user.role === "owner" && (
                         <Link to="/menu" className="px-4 py-2 bg-white text-blue-900 rounded font-bold hover:bg-gray-100">Menu</Link>
                     )}

@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getMenuByRestaurant, addDishToMenu, createDish, imageUpload, deleteDish } from "../services/menu";
+import {
+    getMenuByRestaurant,
+    addDishToMenu,
+    createDish,
+    imageUpload,
+    deleteDish,
+    updateDish // You should have this API function in your services/menu.js
+} from "../services/menu";
 import { useAuth } from '../context/AuthContext';
-import Navbar from "../components/navBar"; // Import the useAuth hook
-
+import Navbar from "../components/navBar";
 
 const Menu = () => {
     const { user, setUser, selectedRestaurant } = useAuth();
-    const [uploading, setUploading] = useState(false); // State to track if the image is being uploaded
-    const [error, setError] = useState(null); // State for handling errors
+    const [uploading, setUploading] = useState(false);
+    const [error, setError] = useState(null);
     const [message, setMessage] = useState('');
 
     const [dishes, setDishes] = useState([]);
@@ -18,10 +24,16 @@ const Menu = () => {
         dishPrice: "",
     });
     const [file, setFile] = useState(null);
+    const [editDishId, setEditDishId] = useState(null);
+    const [editDishData, setEditDishData] = useState({
+        dishName: '',
+        dishDescription: '',
+        dishPrice: ''
+    });
+
     const navigate = useNavigate();
 
     useEffect(() => {
-        // authorization
         if (user.role !== "owner") {
             alert("Unauthorized access");
             navigate("/");
@@ -40,17 +52,15 @@ const Menu = () => {
         }
     }, [selectedRestaurant]);
 
-    // Handle Dish Creation
     const handleCreateDish = async (e) => {
         e.preventDefault();
         setMessage('');
         try {
-            const dishCreated = await createDish(newDish); // Create dish
-            dishCreated.price = dishCreated.dishPrice; // Set price to the created dish's price
-            console.log("Dish created:", dishCreated);
-            await addDishToMenu(selectedRestaurant.id, dishCreated.id); // Add dish to menu
-            setDishes((prevDishes) => [...prevDishes, dishCreated]); // Update state immediately
-            setNewDish({ dishName: "", dishDescription: "", dishPrice: "" }); // Reset form
+            const dishCreated = await createDish(newDish);
+            dishCreated.price = dishCreated.dishPrice;
+            await addDishToMenu(selectedRestaurant.id, dishCreated.id);
+            setDishes((prevDishes) => [...prevDishes, dishCreated]);
+            setNewDish({ dishName: "", dishDescription: "", dishPrice: "" });
             setMessage('Dish created successfully!');
         } catch (error) {
             console.error("Error creating dish:", error);
@@ -58,7 +68,6 @@ const Menu = () => {
         }
     };
 
-    // Handle Image Upload
     const handleImageUpload = async (dishId) => {
         if (file) {
             try {
@@ -69,26 +78,36 @@ const Menu = () => {
         }
     };
 
-    // Handle Adding Dish to Menu
-    const handleAddDish = async (dishId) => {
-        try {
-            await addDishToMenu(selectedRestaurant, dishId);
-        } catch (error) {
-            console.error("Error adding dish to menu:", error);
-        }
-    };
-
-    // Handle Dish Removal
     const handleRemoveDish = async (dishId) => {
         try {
             await deleteDish(selectedRestaurant.id, dishId);
-            setDishes((prevDishes) => prevDishes.filter((dish) => dish.id !== dishId)); // Remove from state
+            setDishes((prevDishes) => prevDishes.filter((dish) => dish.id !== dishId));
         } catch (error) {
             console.error("Error removing dish:", error);
         }
     };
 
+    const handleUpdateDish = async (dishId) => {
+        try {
+            const updated = {
+                dishName: editDishData.dishName,
+                dishDescription: editDishData.dishDescription,
+                dishPrice: parseFloat(editDishData.dishPrice)
+            };
 
+            await updateDish(dishId, updated); // Call your update API
+            setDishes((prev) =>
+                prev.map((dish) =>
+                    dish.id === dishId ? { ...dish, ...updated, price: updated.dishPrice } : dish
+                )
+            );
+            setEditDishId(null);
+            setMessage("Dish updated successfully.");
+        } catch (error) {
+            console.error("Error updating dish:", error);
+            setMessage("Failed to update dish.");
+        }
+    };
 
     return (
         <div className="pt-20 min-h-screen bg-gray-100 py-10 px-6">
@@ -134,16 +153,43 @@ const Menu = () => {
                 <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                     {dishes.map((dish) => (
                         <div key={dish.id} className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
-                            <h3 className="text-lg font-semibold">{dish.dishName}</h3>
-                            <p className="text-gray-600">{dish.dishDescription}</p>
-                            <p className="text-green-600 font-bold">${dish.price}</p>
-
-                            {/* Display Image if Exists */}
-                            {dish.imageLocation && (
-                                <img  src={`http://localhost:5000/api/menus/${dish.id}/download`}
-                                      alt={dish.id} className="w-40 h-40 object-cover rounded-md mt-2" />
+                            {editDishId === dish.id ? (
+                                <div className="w-full space-y-1">
+                                    <input
+                                        type="text"
+                                        value={editDishData.dishName}
+                                        onChange={(e) => setEditDishData({ ...editDishData, dishName: e.target.value })}
+                                        className="border p-1 rounded w-full"
+                                    />
+                                    <input
+                                        type="text"
+                                        value={editDishData.dishDescription}
+                                        onChange={(e) => setEditDishData({ ...editDishData, dishDescription: e.target.value })}
+                                        className="border p-1 rounded w-full"
+                                    />
+                                    <input
+                                        type="number"
+                                        value={editDishData.dishPrice}
+                                        onChange={(e) => setEditDishData({ ...editDishData, dishPrice: e.target.value })}
+                                        className="border p-1 rounded w-full"
+                                    />
+                                </div>
+                            ) : (
+                                <>
+                                    <h3 className="text-lg font-semibold">{dish.dishName}</h3>
+                                    <p className="text-gray-600">{dish.dishDescription}</p>
+                                    <p className="text-green-600 font-bold">${dish.price}</p>
+                                </>
                             )}
 
+                            {/* Display Image */}
+                            {dish.imageLocation && (
+                                <img
+                                    src={`http://localhost:5000/api/menus/${dish.id}/download`}
+                                    alt={dish.id}
+                                    className="w-40 h-40 object-cover rounded-md mt-2"
+                                />
+                            )}
 
                             {/* File Upload */}
                             <input
@@ -154,7 +200,7 @@ const Menu = () => {
                             />
 
                             {/* Buttons */}
-                            <div className="mt-3 flex space-x-2">
+                            <div className="mt-3 flex flex-wrap justify-center gap-2">
                                 <button
                                     onClick={() => handleImageUpload(dish.id)}
                                     className="px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
@@ -168,6 +214,29 @@ const Menu = () => {
                                 >
                                     Remove
                                 </button>
+
+                                {editDishId === dish.id ? (
+                                    <button
+                                        onClick={() => handleUpdateDish(dish.id)}
+                                        className="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700"
+                                    >
+                                        Save
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={() => {
+                                            setEditDishId(dish.id);
+                                            setEditDishData({
+                                                dishName: dish.dishName,
+                                                dishDescription: dish.dishDescription,
+                                                dishPrice: dish.price
+                                            });
+                                        }}
+                                        className="px-3 py-1 bg-yellow-600 text-white rounded-md hover:bg-yellow-700"
+                                    >
+                                        Edit
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}

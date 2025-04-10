@@ -30,6 +30,56 @@ const registerUser = async (req, res) => {
     }
 };
 
+
+
+const updateUserProfile = async (req, res) => {
+    const { userId } = req.params;
+    const { username, email, password, role } = req.body;
+
+    if (!username || !email || !role) {
+        return res.status(400).json({ message: 'Username, email, and role are required' });
+    }
+
+    try {
+        let query;
+        let params;
+
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            query = `
+                UPDATE users
+                SET username = ?, email = ?, password = ?, role = ?
+                WHERE id = ?;
+            `;
+            params = [username, email, hashedPassword, role, userId];
+        } else {
+            query = `
+                UPDATE users
+                SET username = ?, email = ?, role = ?
+                WHERE id = ?;
+            `;
+            params = [username, email, role, userId];
+        }
+
+        db.run(query, params, function (err) {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: 'Error updating user profile' });
+            }
+
+            if (this.changes === 0) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            res.status(200).json({ id: parseInt(userId), username, email, role });
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error while updating user' });
+    }
+};
+
+
 // User login
 const loginUser = (req, res) => {
     const { username, password } = req.body;
@@ -123,4 +173,4 @@ const getOwnedRestaurants = (req, res) => {
         res.status(200).json({ message: restaurants});
     });
 };
-module.exports = { registerUser, loginUser, getAllUsers, deleteUser, ownRestaurant, getOwnedRestaurants };
+module.exports = { registerUser, loginUser, getAllUsers, deleteUser, ownRestaurant, getOwnedRestaurants, updateUserProfile };
