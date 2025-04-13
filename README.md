@@ -265,61 +265,28 @@ Additionally, user authentication and authorization capabilities are provided. D
 
 ## Features
 
-The application provides essential day-to-day functionalities for managing a restaurant. Below is a detailed explanation of each feature.
+The application offers basic day to day features of the restaurant. The detail explaination of all the feature that app provides is listed below.
 
 ---
 
 ### Authentication and Authorization
 
-Users can create an account with a username and password. During registration, users must specify the account type:
-
-- **Owner** – Can manage restaurants by creating profiles, uploading images, and overseeing operations.
-- **Employee** – Can place orders for customers.
-- **Customer** – Has limited access (future enhancements may include customer features).
-
-Each account type has access to a specific set of features based on their role.
+The application allows user to create an account with username and password. When creating account the user has to specify if the account is for owner, employee or customer. Different types of the account can perform different set of actions Owner can manage restaurant by creating restaurant profile such as create restaurant and update the pictures of the restaurant. employees can place orders for the customer.
 
 ---
 
 ### Restaurant Management
 
-This feature is available **only to owners**. Key capabilities include:
-
-- Creating a restaurant profile with:
-  - Name and address
-  - Table layout (number of tables and seats per table)
-  - Profile image
-- Generating a **balance sheet** for a specific year (exported as a CSV file listing all completed orders).
-- Removing a restaurant from ownership.
-- Managing multiple restaurants:
-  - Owners can switch between different restaurants they own.
-  - The UI (restaurant image, menu, and orders) updates based on the selected restaurant.
+The feature is only for restaurants owners, owner can create restaurants with name and address as well as the table layout. The layout is simplified by only specifying the number of tables and number of seats for each table. The owner can also upload an profile image for the restaurant. The owner can also generate a balance sheet for a given year. The balance sheet will be downloaded as a csv file listing all the completed order within that calendar year. The owner can also remove the restuarnt from the ownership. Since each owner can own multiple restaurants so the owner can select a resturant to work with. The restuarnt picture as well as the Menu and orders will change based on the selected restaurant.
 
 ---
 
 ### Menu Management
 
-Owners can manage the restaurant’s menu with the following actions:
-
-- Create dishes by specifying:
-  - Name
-  - Description
-  - Price
-  - Image
-- Edit or remove dishes using **Edit** and **Remove** buttons.
-- Dishes are visible to employees when placing orders.
+Owner can also create dish for a restaurant menu. To create a dish owner can specify a dish name, dish description as well as the price. Owner can also upload the image for the dish, this dish will be shown when employee place the order. There will be Edit and Remove buttons for the dish to remove item from the menu or update the basic information of the dish.
 
 ---
 
 ### Order Management
 
-Both **owners** and **employees** can place orders for customers.
-
-- For **dine-in** orders:
-  - Employees select the customer’s table.
-  - Menu items are displayed for easy selection.
-  - Orders are added to the system and marked as **pending**.
-- Employees can **complete** orders once the purchase is finalized.
-- Each pending order shows the **total price** to simplify employee workflows.
-
----
+Owner and Employee can place the order for the customer. If the Order type is dine in the employee will seect the table that the customer is sat on and all the items from the menu will be shown and employee can add the dish to the order. Once submt the order the pending orders is shwon for each table and the employee can complete the order once the purchase is completed. To make employee’s work simplay the toatal price for each peniding order is also shown.
