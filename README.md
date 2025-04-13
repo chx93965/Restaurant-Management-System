@@ -262,3 +262,64 @@ The backend was developed using Express.js with an SQLite3 database. All API end
 In addition to the basic separation of backend and frontend components, the system also offers advanced features such as file handling and processing. This supports menu and restaurant image uploads and downloads, as well as balance sheet generation. 
 
 Additionally, user authentication and authorization capabilities are provided. Depending on the type of account, different sets of operations will be enabled. For example, only restaurant owners can register restaurants and update menus.
+
+## Features
+
+The application provides essential day-to-day functionalities for managing a restaurant. Below is a detailed explanation of each feature.
+
+---
+
+### Authentication and Authorization
+
+Users can create an account with a username and password. During registration, users must specify the account type:
+
+- **Owner** – Can manage restaurants by creating profiles, uploading images, and overseeing operations.
+- **Employee** – Can place orders for customers.
+- **Customer** – Has limited access (future enhancements may include customer features).
+
+Each account type has access to a specific set of features based on their role.
+
+---
+
+### Restaurant Management
+
+This feature is available **only to owners**. Key capabilities include:
+
+- Creating a restaurant profile with:
+  - Name and address
+  - Table layout (number of tables and seats per table)
+  - Profile image
+- Generating a **balance sheet** for a specific year (exported as a CSV file listing all completed orders).
+- Removing a restaurant from ownership.
+- Managing multiple restaurants:
+  - Owners can switch between different restaurants they own.
+  - The UI (restaurant image, menu, and orders) updates based on the selected restaurant.
+
+---
+
+### Menu Management
+
+Owners can manage the restaurant’s menu with the following actions:
+
+- Create dishes by specifying:
+  - Name
+  - Description
+  - Price
+  - Image
+- Edit or remove dishes using **Edit** and **Remove** buttons.
+- Dishes are visible to employees when placing orders.
+
+---
+
+### Order Management
+
+Both **owners** and **employees** can place orders for customers.
+
+- For **dine-in** orders:
+  - Employees select the customer’s table.
+  - Menu items are displayed for easy selection.
+  - Orders are added to the system and marked as **pending**.
+- Employees can **complete** orders once the purchase is finalized.
+- Each pending order shows the **total price** to simplify employee workflows.
+
+---
