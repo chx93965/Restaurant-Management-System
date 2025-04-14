@@ -10,7 +10,8 @@ const {
     createTablesForRestaurant,
     getTablesByRestaurant,
     uploadImage,
-    downloadImage
+    downloadImage,
+    updateTablesForRestaurant
 } = require('../controllers/restaurantController');
 
 const router = express.Router();
@@ -26,5 +27,6 @@ router.post("/:id/tables", createTablesForRestaurant);
 router.get("/:id/tables", getTablesByRestaurant);
 router.get("/:restaurantId/download", downloadImage);
 router.post("/:restaurantId/upload", uploadImage);
+router.put("/:id/tables", updateTablesForRestaurant);
 
 module.exports = router;

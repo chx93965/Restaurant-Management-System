@@ -10,8 +10,8 @@ export const createRestaurant = async ({ restaurantName, address, postCode, owne
 };
 
 // Update restaurant details
-export const updateRestaurant = async (restaurantId, { restaurantName, address, postCode }) => {
-    const response = await axios.put(`${apiUrl}/${restaurantId}`, { restaurantName, address, postCode });
+export const updateRestaurant = async (restaurantId, { restaurantName, address, postcode }) => {
+    const response = await axios.put(`${apiUrl}/${restaurantId}`, { restaurantName, address, postcode });
     return response.data;
 };
 
@@ -37,6 +37,12 @@ export const addTable = async (restaurantId, tables) => {
 // Create multiple tables for a restaurant
 export const createTablesForRestaurant = async (restaurantId, tableSizes) => {
     const response = await axios.post(`${apiUrl}/${restaurantId}/tables`, { tables: tableSizes });
+    return response.data;
+};
+
+export const updateTablesForRestaurant = async (restaurantId, tableSizes) => {
+    const response = await axios.put(`${apiUrl}/${restaurantId}/tables`, { tables: tableSizes });
+    console.log("Updated tables for restaurant:", response.data);
     return response.data;
 };
 

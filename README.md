@@ -262,3 +262,31 @@ The backend was developed using Express.js with an SQLite3 database. All API end
 In addition to the basic separation of backend and frontend components, the system also offers advanced features such as file handling and processing. This supports menu and restaurant image uploads and downloads, as well as balance sheet generation. 
 
 Additionally, user authentication and authorization capabilities are provided. Depending on the type of account, different sets of operations will be enabled. For example, only restaurant owners can register restaurants and update menus.
+
+## Features
+
+The application offers basic day to day features of the restaurant. The detail explaination of all the feature that app provides is listed below.
+
+---
+
+### Authentication and Authorization
+
+The application allows user to create an account with username and password. When creating account the user has to specify if the account is for owner, employee or customer. Different types of the account can perform different set of actions Owner can manage restaurant by creating restaurant profile such as create restaurant and update the pictures of the restaurant. employees can place orders for the customer.
+
+---
+
+### Restaurant Management
+
+The feature is only for restaurants owners, owner can create restaurants with name and address as well as the table layout. The layout is simplified by only specifying the number of tables and number of seats for each table. The owner can also upload an profile image for the restaurant. The owner can also generate a balance sheet for a given year. The balance sheet will be downloaded as a csv file listing all the completed order within that calendar year. The owner can also remove the restuarnt from the ownership. Since each owner can own multiple restaurants so the owner can select a resturant to work with. The restuarnt picture as well as the Menu and orders will change based on the selected restaurant.
+
+---
+
+### Menu Management
+
+Owner can also create dish for a restaurant menu. To create a dish owner can specify a dish name, dish description as well as the price. Owner can also upload the image for the dish, this dish will be shown when employee place the order. There will be Edit and Remove buttons for the dish to remove item from the menu or update the basic information of the dish.
+
+---
+
+### Order Management
+
+Owner and Employee can place the order for the customer. If the Order type is dine in the employee will seect the table that the customer is sat on and all the items from the menu will be shown and employee can add the dish to the order. Once submt the order the pending orders is shwon for each table and the employee can complete the order once the purchase is completed. To make employee’s work simplay the toatal price for each peniding order is also shown.

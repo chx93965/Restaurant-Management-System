@@ -6,7 +6,7 @@ const path = require("path");
 
 // Create a new restaurant
 const createRestaurant = (req, res) => {
-    const { restaurantName, address, postCode, ownerId } = req.body;
+    const { restaurantName, address, postcode, ownerId } = req.body;
 
     // Check if required fields are provided
     if (!restaurantName || !address || !ownerId) {
@@ -17,7 +17,7 @@ const createRestaurant = (req, res) => {
     db.serialize(() => {
         // Insert restaurant into the restaurants table
         const restaurantQuery = `INSERT INTO restaurants (restaurantName, address, postcode) VALUES (?, ?, ?)`;
-        db.run(restaurantQuery, [restaurantName, address, postCode], function (err) {
+        db.run(restaurantQuery, [restaurantName, address, postcode], function (err) {
             if (err) {
                 console.error(err);
                 return res.status(500).json({ message: 'Error creating restaurant' });
@@ -82,9 +82,9 @@ const getRestaurantByUsername = (req, res) => {
 // Update restaurant details
 const updateRestaurant = (req, res) => {
     const { id } = req.params;
-    const { restaurantName, address, postCode } = req.body;
+    const { restaurantName, address, postcode } = req.body;
 
-    if (!restaurantName && !address && !postCode) {
+    if (!restaurantName && !address && !postcode) {
         return res.status(400).json({ message: 'restaurantName, address and postCode fields are required' });
     }
 
@@ -99,11 +99,11 @@ const updateRestaurant = (req, res) => {
         query += ` address = ?,`;
         params.push(address);
     }
-    if (postCode) {
-        query += ` postCode = ?,`;
-        params.push(postCode);
+    if (postcode) {
+        query += ` postcode = ?,`;
+        params.push(postcode);
     }
-    query = query.slice(0, -1); 
+    query = query.slice(0, -1); // Remove trailing comma
     query += ` WHERE id = ?`;
     params.push(id);
 
@@ -115,9 +115,18 @@ const updateRestaurant = (req, res) => {
         if (this.changes === 0) {
             return res.status(404).json({ message: 'Restaurant not found' });
         }
-        res.json({ message: 'Restaurant updated successfully' });
+
+        // Fetch updated restaurant
+        db.get(`SELECT id, restaurantName, address, postcode, imageLocation FROM restaurants WHERE id = ?`, [id], (err, row) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: 'Error retrieving updated restaurant' });
+            }
+            res.json(row);
+        });
     });
 };
+
 
 // Delete a restaurant
 const deleteRestaurant = (req, res) => {
@@ -155,6 +164,47 @@ const createTablesForRestaurant = (req, res) => {
 
     res.status(201).json({ message: "Tables created successfully" });
 };
+
+const updateTablesForRestaurant = (req, res) => {
+    const { id } = req.params;
+    const { tables } = req.body;
+
+    if (!id || !Array.isArray(tables)) {
+        return res.status(400).json({ message: "Restaurant ID and an array of tables are required." });
+    }
+
+    const deleteQuery = `DELETE FROM tables WHERE restaurantId = ?`;
+    const insertQuery = `INSERT INTO tables (size, restaurantId) VALUES (?, ?)`;
+
+    db.serialize(() => {
+        db.run(deleteQuery, [id], (err) => {
+            if (err) {
+                console.error("Error deleting existing tables:", err.message);
+                return res.status(500).json({ message: "Error updating tables" });
+            }
+
+            const insertStmt = db.prepare(insertQuery);
+
+            for (const size of tables) {
+                insertStmt.run([size, id], (err) => {
+                    if (err) {
+                        console.error("Error inserting new table:", err.message);
+                    }
+                });
+            }
+
+            insertStmt.finalize((err) => {
+                if (err) {
+                    console.error("Error finalizing insert statement:", err.message);
+                    return res.status(500).json({ message: "Error finalizing table update" });
+                }
+
+                res.status(200).json({ message: "Tables updated successfully" });
+            });
+        });
+    });
+};
+
 
 // Add a single table to a restaurant
 const addTable = (req, res) => {
@@ -325,5 +375,6 @@ module.exports = {
     getTablesByRestaurant,
     uploadImage,
     getImageUrl,
-    downloadImage
+    downloadImage,
+    updateTablesForRestaurant
 };
