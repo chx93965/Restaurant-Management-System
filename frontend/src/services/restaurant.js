@@ -4,8 +4,9 @@ import axios from 'axios';
 const apiUrl = 'http://localhost:5000/api/restaurants';
 
 // Create a new restaurant
-export const createRestaurant = async ({ restaurantName, address, postCode, ownerId }) => {
-    const response = await axios.post(apiUrl, { restaurantName, address, postCode, ownerId });
+export const createRestaurant = async ({ restaurantName, address, postcode, ownerId }) => {
+    console.log("Creating restaurant with data:", { restaurantName, address, postcode, ownerId });
+    const response = await axios.post(apiUrl, { restaurantName, address, postcode, ownerId });
     return response.data;
 };
 
@@ -18,6 +19,10 @@ export const updateRestaurant = async (restaurantId, { restaurantName, address, 
 // Get all restaurants
 export const getAllRestaurants = async (username) => {
     const response = await axios.get(`${apiUrl}/${username}`);
+    return response.data;
+};
+export const getRestaurantsById = async (id) => {
+    const response = await axios.get(`${apiUrl}/${id}/info`);
     return response.data;
 };
 

@@ -5,7 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 const RestaurantForm = ({ restaurantId, existingData, onSuccess }) => {
     const [restaurantName, setRestaurantName] = useState(existingData?.restaurantName || '');
     const [address, setAddress] = useState(existingData?.address || '');
-    const [postCode, setPostCode] = useState(existingData?.postCode || '');
+    const [postcode, setPostCode] = useState(existingData?.postcode || '');
     const [seatsPerTable, setSeatsPerTable] = useState(existingData?.tables || []); // array like [2, 4, 2]
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -56,10 +56,10 @@ const RestaurantForm = ({ restaurantId, existingData, onSuccess }) => {
             const payload = {
                 restaurantName,
                 address,
-                postCode,
+                postcode,
                 tables: seatsPerTable,
             };
-
+            console.log("Payload:", payload);
             if (restaurantId) {
                 await updateRestaurant(restaurantId, payload);
             } else {
@@ -116,7 +116,7 @@ const RestaurantForm = ({ restaurantId, existingData, onSuccess }) => {
                     <label className="block text-gray-700 font-semibold mb-1">Postcode</label>
                     <input
                         type="text"
-                        value={postCode}
+                        value={postcode}
                         onChange={(e) => setPostCode(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     />

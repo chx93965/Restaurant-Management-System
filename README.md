@@ -290,3 +290,39 @@ Owner can also create dish for a restaurant menu. To create a dish owner can spe
 ### Order Management
 
 Owner and Employee can place the order for the customer. If the Order type is dine in the employee will seect the table that the customer is sat on and all the items from the menu will be shown and employee can add the dish to the order. Once submt the order the pending orders is shwon for each table and the employee can complete the order once the purchase is completed. To make employee’s work simplay the toatal price for each peniding order is also shown.
+
+## User Guide
+
+### Login and Sign Up
+
+The default URL for the application is [http://localhost:5173/](http://localhost:5173/). Upon opening the page, you will see a welcome message for the Restaurant Application. At the top, there is a navigation panel with default tabs: **Home**, **Order**, and **Profile**. However, if you are not logged in, clicking any of these tabs will redirect you to the Login page.
+
+To begin, you need to create an account by clicking on the **Sign Up** button.
+
+During the sign-up process, you can choose from three roles: **Customer**, **Owner**, or **Server**. Passwords are encrypted following standard practices, and you will be able to see the characters you type. After successfully creating an account, you will be redirected to the Login page.
+
+The login form contains fields for your username and password. If the username does not exist, an error message will display: `"Invalid username"`. If the password is incorrect, the error will read: `"Invalid password"`. Once successfully logged in, you will be redirected to the Home page. At this point, the navigation panel may change depending on your user role. For example, if you are logged in as an **Owner**, you will now see additional options such as **Create Menu** and **Order**.
+
+### Restaurant Management
+
+Initially, you will not own any restaurants. You will be presented with a form to create a new restaurant. Below the form, a list of restaurants you own will be displayed. If you do not own any, a message will inform you accordingly.
+
+To create a restaurant, you must provide the following information:
+
+- Restaurant name
+- Address
+- Postal code
+- Number of tables
+- Capacity per table
+
+This information can be updated later. The form includes basic validation—for example, if you try to submit without entering a restaurant name, an error message will appear stating that the field is required.
+
+Once submitted, a new restaurant card will be created displaying all the information you provided. Below the restaurant name and address, you will find an **Edit** button to modify the basic information or adjust the number of tables. You also have the option to **upload an image** for the restaurant.
+
+Other actions include:
+
+- A **Delete** button (red) to remove the restaurant.
+- An option for the **Owner** to generate a balance sheet (explained later).
+- A **Select** button that allows the Owner to choose the restaurant to work with.
+
+Once a restaurant is selected, this choice will affect other sections such as **Menu** and **Order**. For example, if you select "KFC", clicking on the **Menu** tab will display the menu items for the KFC restaurant only.

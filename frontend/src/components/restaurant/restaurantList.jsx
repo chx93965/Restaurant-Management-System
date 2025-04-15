@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from 'react-router-dom';
-import { handleImageUpload, deleteRestaurant, updateRestaurant, updateTablesForRestaurant } from '../../services/restaurant';
+import { handleImageUpload, deleteRestaurant, updateRestaurant, updateTablesForRestaurant, getRestaurantsById } from '../../services/restaurant';
 import { allCompletedOrder } from '../../services/order';
 
 const RestaurantList = ({ restaurants, setRestaurants, loading, error }) => {
@@ -54,11 +54,28 @@ const RestaurantList = ({ restaurants, setRestaurants, loading, error }) => {
         if (file) setImage(file);
     };
 
-    const handleUpload = () => {
-        if (selectedRestaurant) {
-            handleImageUpload(image, selectedRestaurant.id, setUploading, (err) => {
+    const handleUpload = async (restaurantId) => {
+        if (!image || !restaurantId) return;
+    
+        try {
+            await handleImageUpload(image, restaurantId, setUploading, (err) => {
                 if (err) console.error("Image upload error:", err);
             });
+
+            const res = await getRestaurantsById(restaurantId);
+
+            const idStr = String(restaurantId);
+            setRestaurants(prev => {
+                return prev.map(r => {
+                    if (String(r.id) === idStr) {
+                        console.log('Updating restaurant:', res);
+                        return res;
+                    }
+                    return r;
+                });
+            });
+        } catch (err) {
+            console.error("Error after image upload:", err);
         }
     };
 
@@ -158,6 +175,7 @@ const RestaurantList = ({ restaurants, setRestaurants, loading, error }) => {
         }
         setLoadingBalance(false);
     };
+
     console.log("Rendering restaurant list:", restaurants);
     return (
         <div className="max-w-4xl mx-auto p-6">
@@ -242,8 +260,8 @@ const RestaurantList = ({ restaurants, setRestaurants, loading, error }) => {
                                 {/* Restaurant Image */}
                                 {restaurant.imageLocation && (
                                     <img
-                                        src={`http://localhost:5000/api/restaurants/${restaurant.id}/download`}
-                                        alt={`Restaurant ${restaurant.id}`}
+                                    src={`http://localhost:5000/api/restaurants/${restaurant.id}/download?t=${Date.now()}`}
+                                    alt={`Restaurant ${restaurant.id}`}
                                         className="w-40 h-40 object-cover rounded-md mt-2"
                                     />
                                 )}
@@ -311,7 +329,7 @@ const RestaurantList = ({ restaurants, setRestaurants, loading, error }) => {
                                         className="mb-2 p-2 border border-gray-300 rounded-md block"
                                     />
                                     <button
-                                        onClick={handleUpload}
+                                        onClick={() => handleUpload(restaurant.id)}
                                         disabled={uploading}
                                         className={`px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 ${
                                             uploading ? 'cursor-not-allowed opacity-50' : ''

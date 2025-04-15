@@ -11,7 +11,8 @@ const {
     getTablesByRestaurant,
     uploadImage,
     downloadImage,
-    updateTablesForRestaurant
+    updateTablesForRestaurant,
+    getRestaurantById
 } = require('../controllers/restaurantController');
 
 const router = express.Router();
@@ -19,6 +20,8 @@ const router = express.Router();
 router.post('/', createRestaurant);
 router.get('/', getAllRestaurants);
 router.get('/:username', getRestaurantByUsername);
+router.get('/:id/info', getRestaurantById);
+
 router.put('/:id', updateRestaurant);
 router.delete('/:id', deleteRestaurant);
 router.post("/:id/tables/:size", addTable);
