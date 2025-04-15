@@ -79,6 +79,23 @@ const getRestaurantByUsername = (req, res) => {
     });
 };
 
+const getRestaurantById = (req, res) => {
+    const { id } = req.params;
+
+    const query = `SELECT * FROM restaurants WHERE id = ?`;
+
+    db.get(query, [id], (err, restaurant) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Error fetching restaurant by ID' });
+        }
+        if (!restaurant) {
+            return res.status(404).json({ message: 'Restaurant not found' });
+        }
+        res.json(restaurant);
+    });
+};
+
 // Update restaurant details
 const updateRestaurant = (req, res) => {
     const { id } = req.params;
@@ -376,5 +393,6 @@ module.exports = {
     uploadImage,
     getImageUrl,
     downloadImage,
-    updateTablesForRestaurant
+    updateTablesForRestaurant,
+    getRestaurantById
 };
