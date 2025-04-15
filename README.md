@@ -302,6 +302,7 @@ To begin, you need to create an account by clicking on the **Sign Up** button.
 During the sign-up process, you can choose from three roles: **Customer**, **Owner**, or **Server**. Passwords are encrypted following standard practices, and you will be able to see the characters you type. After successfully creating an account, you will be redirected to the Login page.
 
 The login form contains fields for your username and password. If the username does not exist, an error message will display: `"Invalid username"`. If the password is incorrect, the error will read: `"Invalid password"`. Once successfully logged in, you will be redirected to the Home page. At this point, the navigation panel may change depending on your user role. For example, if you are logged in as an **Owner**, you will now see additional options such as **Create Menu** and **Order**.
+![Alt Text](https://example.com/image.jpg)
 
 ### Restaurant Management
 
