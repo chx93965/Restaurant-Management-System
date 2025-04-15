@@ -17,13 +17,6 @@ function UserProfile() {
     const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState('');
 
-    const [formData, setFormData] = useState({
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        password: '',
-    });
-
     useEffect(() => {
         if (!user) {
             navigate('/login');
@@ -43,6 +36,13 @@ function UserProfile() {
 
         fetchRestaurants();
     }, [user, navigate]);
+
+    const [formData, setFormData] = useState({
+        username: user?.username || '',
+        email: user?.email || '',
+        role: user?.role || '',
+        password: '' // new password,
+    });
 
     const handleBackToHome = () => navigate('/');
 
