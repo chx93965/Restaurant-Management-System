@@ -335,3 +335,16 @@ Once the owner selects a restaurant, they can begin making changes to the restau
 After a dish is added, the owner has the option to either remove it from the menu or update its basic information—such as the price—by clicking the **Edit** button. Additionally, the owner can upload an image for the dish; otherwise, a default picture will be shown.
 
 This step is crucial, as customers can only start placing orders once the menu has been created.
+
+
+## Lessons Learned
+
+One important lesson learned from building this application is the importance of properly designing the system architecture before jumping into implementation. Without a solid design, making changes later—especially to the database schema—can become extremely difficult and time-consuming.
+
+For example, in the initial design, the `user` table included a field to indicate the restaurant a user owns. Later, we realized that an owner may manage multiple restaurants. This required us to normalize the schema and introduce a new table to map users to restaurant IDs. This change significantly impacted how the backend was structured.
+
+If the APIs and schema had been carefully planned from the beginning, the development process would have been more straightforward and less prone to refactoring.
+
+## Conclusion
+
+In conclusion, this application serves as a strong proof of concept that demonstrates how digital solutions can significantly improve the efficiency of restaurant operations. It helps owners, servers, and even customers perform day-to-day tasks more effectively. By streamlining operations and reducing manual errors, the application has the potential to save users hundreds of hours each year and make their daily work more accurate and manageable.
