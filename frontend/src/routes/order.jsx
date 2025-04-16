@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from "../context/AuthContext";
 import { getMenuByRestaurant } from "../services/menu";
-import { addOrder, getOrders, addItemsToOrder, completeOrder } from "../services/order"; 
+import { addOrder, getOrders, addItemsToOrder, completeOrder } from "../services/order";
 import { getTablesByRestaurant } from "../services/restaurant";
 import Navbar from "../components/navBar";
 import { useNavigate } from 'react-router-dom'; // For redirection
@@ -72,23 +72,33 @@ const OrderPage = ({ restaurantId }) => {
             .flatMap(([dishId, count]) => Array(count).fill({ dishId: parseInt(dishId) }));
     };
 
-    const subtotal = menu.reduce((acc, dish) => {
-        return acc + (dish.price * (quantities[dish.id] || 0));
-    }, 0);
-    const HST_RATE = 0.13;
-    const hst = subtotal * HST_RATE;
-    const totalPrice = subtotal + hst;
+    // const subtotal = menu.reduce((acc, dish) => {
+    //     return acc + (dish.price * (quantities[dish.id] || 0));
+    // }, 0);
+    // const HST_RATE = 0.13;
+    // const hst = subtotal * HST_RATE;
+    // const totalPrice = subtotal + hst;
+
+    const calculatePrice = (items) => {
+        const HST_RATE = 0.13;
+        const subtotal = items.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0);
+        const tax = subtotal * HST_RATE;
+        const total = tax + subtotal;
+        return { subtotal, tax, total };
+    }
 
     // Function to handle submitting an order
     const handleSubmit = async () => {
         if (orderType === 'dine-in' && !tableId) {
-            alert('Please enter your table ID.');
+            setMessage('Please enter your table ID');
+            setSuccess(false);
             return;
         }
 
         const dishes = getOrderItems();
         if (dishes.length === 0) {
-            alert('Please select at least one item.');
+            setMessage('Please select at least one item');
+            setSuccess(false);
             return;
         }
 
@@ -132,6 +142,8 @@ const OrderPage = ({ restaurantId }) => {
             console.error("Error refreshing pending orders:", error);
         }
 
+        // reset order section
+        setQuantities(Object.fromEntries(menu.map(dish => [dish.id, 0])));
         setSubmitting(false);
     };
 
@@ -180,6 +192,7 @@ const OrderPage = ({ restaurantId }) => {
 
                 <h1 className="text-3xl font-bold mb-4">Place Your Order</h1>
 
+                {/* Order Items */}
                 <div className="order-type-selector mb-6">
                     <label className="block text-gray-700">Order Type:</label>
                     <select
@@ -218,8 +231,14 @@ const OrderPage = ({ restaurantId }) => {
                         <ul className="space-y-3">
                             {groupOrdersByTable(pendingOrders).map((order, index) => {
                                 // Calculate the total for each table
-                                const orderTotal = order.items.reduce((sum, item) => sum + item.price, 0);
-                                const orderTax = orderTotal * HST_RATE;
+                                const summarizedItems = Object.values(order.items.reduce((acc, item) => {
+                                    if (!acc[item.dishId]) {
+                                        acc[item.dishId] = { ...item, quantity: 0 };
+                                    }
+                                    acc[item.dishId].quantity += 1;
+                                    return acc;
+                                }, {}));
+                                const { tax, total } = calculatePrice(summarizedItems);
                                 const tableIndex = tables.findIndex(table => table.id === order.tableId);
                                 // Display "Table #1", "Table #2", etc.
                                 const tableNumber = tableIndex >= 0 ? `Table #${tableIndex}` : 'Unknown Table';
@@ -227,18 +246,22 @@ const OrderPage = ({ restaurantId }) => {
                                     <li key={index} className="border-b pb-4">
                                         <div className="flex justify-between items-center">
                                             <span>{tableNumber}</span> {/* Table Number */}
-                                            <span className="font-semibold text-green-600">${orderTotal.toFixed(2)}</span>
+                                            <span className="font-semibold text-green-600">${total.toFixed(2)}</span>
                                         </div>
                                         <ul className="mt-2">
-                                            {order.items.map((item, i) => (
+                                            {/* Display each item in the order*/}
+                                            {summarizedItems.map((item, i) => (
                                                 <li key={i} className="flex justify-between">
-                                                    <span>{item.dishName}</span>
-                                                    <span className="text-gray-500">${item.price.toFixed(2)}</span>
+                                                    <span>{item.dishName} x {item.quantity}</span>
+                                                    <span className="text-gray-500">
+                                                        ${(item.price * item.quantity).toFixed(2)}
+                                                    </span>
                                                 </li>
                                             ))}
+
                                             <li key="hst" className="flex justify-between">
                                                 <span>HST (13%): </span>
-                                                <span className="text-gray-500">${orderTax.toFixed(2)}</span>
+                                                <span className="text-gray-500">${tax.toFixed(2)}</span>
                                             </li>
                                         </ul>
                                         <button
@@ -254,6 +277,7 @@ const OrderPage = ({ restaurantId }) => {
                     </div>
                 )}
 
+                {/* Menu Section */}
                 <div className="menu-list mb-6">
                     <h2 className="text-2xl font-semibold text-gray-800 mb-4">Menu</h2>
                     {menu.map(dish => (
@@ -288,45 +312,62 @@ const OrderPage = ({ restaurantId }) => {
                     ))}
                 </div>
 
+                {/* Order Summary */}
                 <div className="order-summary mb-6">
                     <h2 className="text-2xl font-semibold text-gray-800 mb-4">Your Order</h2>
                     {Object.entries(quantities).filter(([_, qty]) => qty > 0).length === 0 ? (
                         <p className="text-gray-500">No items selected yet.</p>
                     ) : (
-                        <>
-                            <ul className="space-y-3">
-                                {menu
-                                    .filter(dish => quantities[dish.id] > 0)
-                                    .map(dish => (
-                                        <li key={dish.id} className="flex justify-between items-center border-b pb-2">
-                                            <span>{dish.dishName}</span>
-                                            <div className="flex items-center">
-                                                <button
-                                                    onClick={() => updateQuantity(dish.id, -1)}
-                                                    disabled={quantities[dish.id] === 0}
-                                                    className="px-2 py-0.25 bg-white text-black font-bold rounded-md hover:bg-red-600"
-                                                >
-                                                    -
-                                                </button>
-                                                <span className="mx-3">{quantities[dish.id]}</span>
-                                                <button
-                                                    onClick={() => updateQuantity(dish.id, 1)}
-                                                    disabled={quantities[dish.id] >= 100}
-                                                    className="px-2 py-0.25 bg-white text-black font-bold rounded-md hover:bg-green-600"
-                                                >
-                                                    +
-                                                </button>
-                                            </div>
-                                        </li>
-                                    ))}
-                            </ul>
-                            <p className="mt-4">Subtotal: $ {subtotal.toFixed(2)}</p>
-                            <p className="mt-1">HST (13%): $ {hst.toFixed(2)}</p>
-                            <p className="mt-2 text-xl font-bold">Total: $ {totalPrice.toFixed(2)}</p>
-                        </>
+                        (() => {
+                            const selectedItems = menu
+                                .filter(dish => quantities[dish.id] > 0)
+                                .map(dish => ({ ...dish, quantity: quantities[dish.id] }));
+                            const { subtotal, tax, total } = calculatePrice(selectedItems);
+                            return (
+                                <>
+                                    <ul className="space-y-3">
+                                        {selectedItems.map(dish => (
+                                            <li key={dish.id}
+                                                className="flex justify-between items-center border-b pb-2">
+                                                <span>{dish.dishName}</span>
+                                                <div className="flex items-center">
+                                                    <button
+                                                        onClick={() => updateQuantity(dish.id, -1)}
+                                                        disabled={quantities[dish.id] === 0}
+                                                        className="px-2 py-0.25 bg-white text-black font-bold rounded-md hover:bg-red-600"
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <span className="mx-3">{quantities[dish.id]}</span>
+                                                    <button
+                                                        onClick={() => updateQuantity(dish.id, 1)}
+                                                        disabled={quantities[dish.id] >= 100}
+                                                        className="px-2 py-0.25 bg-white text-black font-bold rounded-md hover:bg-green-600"
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <p className="mt-4">Subtotal: $ {subtotal.toFixed(2)}</p>
+                                    <p className="mt-1">HST (13%): $ {tax.toFixed(2)}</p>
+                                    <p className="mt-2 text-xl font-bold">Total: $ {total.toFixed(2)}</p>
+                                </>
+                            )
+                        })()
                     )}
                 </div>
 
+                {/* Clear Order button */}
+                <button
+                    onClick={() => setQuantities(Object.fromEntries(menu.map(dish => [dish.id, 0])))}
+                    className="w-full py-2 bg-gray-300 text-black font-semibold rounded-md hover:bg-gray-400 transition duration-200 mb-4"
+                >
+                    Clear Order
+                </button>
+
+                {/* Submit Order Button */}
                 <button
                     onClick={handleSubmit}
                     disabled={submitting}
