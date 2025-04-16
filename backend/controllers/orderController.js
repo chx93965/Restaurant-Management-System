@@ -114,7 +114,7 @@ const getOrders = (req, res) => {
         queryParams.push(status);
     }
     
-    if (year) {
+    if (year && year !== 'undefined') {
         query += ` AND strftime('%Y', o.createdAt) = ?`;
         queryParams.push(year);
     }

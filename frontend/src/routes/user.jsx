@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { getOwnedRestaurants } from '../services/user';
 import { handleImageUpload } from '../services/restaurant';
 import { updateUserProfile } from '../services/user'; // <- Create this API
 import Navbar from "../components/navBar";
@@ -10,39 +9,24 @@ function UserProfile() {
     const { user, setUser, selectedRestaurant, setSelectedRestaurant } = useAuth();
     const navigate = useNavigate();
 
-    const [restaurants, setRestaurants] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState('');
-
-    const [formData, setFormData] = useState({
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        password: '',
-    });
 
     useEffect(() => {
         if (!user) {
             navigate('/login');
             return;
         }
-
-        const fetchRestaurants = async () => {
-            try {
-                const fetchedRestaurants = await getOwnedRestaurants(user.id);
-                setRestaurants(fetchedRestaurants);
-            } catch (err) {
-                setError('Error fetching owned restaurants');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchRestaurants();
     }, [user, navigate]);
+
+    const [formData, setFormData] = useState({
+        username: user?.username || '',
+        email: user?.email || '',
+        role: user?.role || '',
+        password: '' // new password,
+    });
 
     const handleBackToHome = () => navigate('/');
 
@@ -78,7 +62,6 @@ function UserProfile() {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
     if (error) return <div className="text-red-500">{error}</div>;
 
     return (

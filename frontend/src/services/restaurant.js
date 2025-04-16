@@ -18,7 +18,7 @@ export const updateRestaurant = async (restaurantId, { restaurantName, address, 
 
 // Get all restaurants
 export const getAllRestaurants = async (username) => {
-    const response = await axios.get(`${apiUrl}/${username}`);
+    const response = await axios.get(apiUrl);
     return response.data;
 };
 export const getRestaurantsById = async (id) => {
