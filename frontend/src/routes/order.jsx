@@ -72,23 +72,33 @@ const OrderPage = ({ restaurantId }) => {
             .flatMap(([dishId, count]) => Array(count).fill({ dishId: parseInt(dishId) }));
     };
 
-    const subtotal = menu.reduce((acc, dish) => {
-        return acc + (dish.price * (quantities[dish.id] || 0));
-    }, 0);
-    const HST_RATE = 0.13;
-    const hst = subtotal * HST_RATE;
-    const totalPrice = subtotal + hst;
+    // const subtotal = menu.reduce((acc, dish) => {
+    //     return acc + (dish.price * (quantities[dish.id] || 0));
+    // }, 0);
+    // const HST_RATE = 0.13;
+    // const hst = subtotal * HST_RATE;
+    // const totalPrice = subtotal + hst;
+
+    const calculatePrice = (items) => {
+        const HST_RATE = 0.13;
+        const subtotal = items.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0);
+        const tax = subtotal * HST_RATE;
+        const total = tax + subtotal;
+        return { subtotal, tax, total };
+    }
 
     // Function to handle submitting an order
     const handleSubmit = async () => {
         if (orderType === 'dine-in' && !tableId) {
-            alert('Please enter your table ID.');
+            setMessage('Please enter your table ID');
+            setSuccess(false);
             return;
         }
 
         const dishes = getOrderItems();
         if (dishes.length === 0) {
-            alert('Please select at least one item.');
+            setMessage('Please select at least one item');
+            setSuccess(false);
             return;
         }
 
@@ -221,9 +231,14 @@ const OrderPage = ({ restaurantId }) => {
                         <ul className="space-y-3">
                             {groupOrdersByTable(pendingOrders).map((order, index) => {
                                 // Calculate the total for each table
-                                const orderSubtotal = order.items.reduce((sum, item) => sum + item.price, 0);
-                                const orderTax = orderSubtotal * HST_RATE;
-                                const orderTotal = orderSubtotal + orderTax;
+                                const summarizedItems = Object.values(order.items.reduce((acc, item) => {
+                                    if (!acc[item.dishId]) {
+                                        acc[item.dishId] = { ...item, quantity: 0 };
+                                    }
+                                    acc[item.dishId].quantity += 1;
+                                    return acc;
+                                }, {}));
+                                const { tax, total } = calculatePrice(summarizedItems);
                                 const tableIndex = tables.findIndex(table => table.id === order.tableId);
                                 // Display "Table #1", "Table #2", etc.
                                 const tableNumber = tableIndex >= 0 ? `Table #${tableIndex}` : 'Unknown Table';
@@ -231,16 +246,11 @@ const OrderPage = ({ restaurantId }) => {
                                     <li key={index} className="border-b pb-4">
                                         <div className="flex justify-between items-center">
                                             <span>{tableNumber}</span> {/* Table Number */}
-                                            <span className="font-semibold text-green-600">${orderTotal.toFixed(2)}</span>
+                                            <span className="font-semibold text-green-600">${total.toFixed(2)}</span>
                                         </div>
                                         <ul className="mt-2">
-                                            {Object.values(order.items.reduce((acc, item) => {
-                                                if (!acc[item.dishId]) {
-                                                    acc[item.dishId] = { ...item, quantity: 0 };
-                                                }
-                                                acc[item.dishId].quantity += 1;
-                                                return acc;
-                                            }, {})).map((item, i) => (
+                                            {/* Display each item in the order*/}
+                                            {summarizedItems.map((item, i) => (
                                                 <li key={i} className="flex justify-between">
                                                     <span>{item.dishName} x {item.quantity}</span>
                                                     <span className="text-gray-500">
@@ -251,7 +261,7 @@ const OrderPage = ({ restaurantId }) => {
 
                                             <li key="hst" className="flex justify-between">
                                                 <span>HST (13%): </span>
-                                                <span className="text-gray-500">${orderTax.toFixed(2)}</span>
+                                                <span className="text-gray-500">${tax.toFixed(2)}</span>
                                             </li>
                                         </ul>
                                         <button
@@ -308,37 +318,44 @@ const OrderPage = ({ restaurantId }) => {
                     {Object.entries(quantities).filter(([_, qty]) => qty > 0).length === 0 ? (
                         <p className="text-gray-500">No items selected yet.</p>
                     ) : (
-                        <>
-                            <ul className="space-y-3">
-                                {menu
-                                    .filter(dish => quantities[dish.id] > 0)
-                                    .map(dish => (
-                                        <li key={dish.id} className="flex justify-between items-center border-b pb-2">
-                                            <span>{dish.dishName}</span>
-                                            <div className="flex items-center">
-                                                <button
-                                                    onClick={() => updateQuantity(dish.id, -1)}
-                                                    disabled={quantities[dish.id] === 0}
-                                                    className="px-2 py-0.25 bg-white text-black font-bold rounded-md hover:bg-red-600"
-                                                >
-                                                    -
-                                                </button>
-                                                <span className="mx-3">{quantities[dish.id]}</span>
-                                                <button
-                                                    onClick={() => updateQuantity(dish.id, 1)}
-                                                    disabled={quantities[dish.id] >= 100}
-                                                    className="px-2 py-0.25 bg-white text-black font-bold rounded-md hover:bg-green-600"
-                                                >
-                                                    +
-                                                </button>
-                                            </div>
-                                        </li>
-                                    ))}
-                            </ul>
-                            <p className="mt-4">Subtotal: $ {subtotal.toFixed(2)}</p>
-                            <p className="mt-1">HST (13%): $ {hst.toFixed(2)}</p>
-                            <p className="mt-2 text-xl font-bold">Total: $ {totalPrice.toFixed(2)}</p>
-                        </>
+                        (() => {
+                            const selectedItems = menu
+                                .filter(dish => quantities[dish.id] > 0)
+                                .map(dish => ({ ...dish, quantity: quantities[dish.id] }));
+                            const { subtotal, tax, total } = calculatePrice(selectedItems);
+                            return (
+                                <>
+                                    <ul className="space-y-3">
+                                        {selectedItems.map(dish => (
+                                            <li key={dish.id}
+                                                className="flex justify-between items-center border-b pb-2">
+                                                <span>{dish.dishName}</span>
+                                                <div className="flex items-center">
+                                                    <button
+                                                        onClick={() => updateQuantity(dish.id, -1)}
+                                                        disabled={quantities[dish.id] === 0}
+                                                        className="px-2 py-0.25 bg-white text-black font-bold rounded-md hover:bg-red-600"
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <span className="mx-3">{quantities[dish.id]}</span>
+                                                    <button
+                                                        onClick={() => updateQuantity(dish.id, 1)}
+                                                        disabled={quantities[dish.id] >= 100}
+                                                        className="px-2 py-0.25 bg-white text-black font-bold rounded-md hover:bg-green-600"
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <p className="mt-4">Subtotal: $ {subtotal.toFixed(2)}</p>
+                                    <p className="mt-1">HST (13%): $ {tax.toFixed(2)}</p>
+                                    <p className="mt-2 text-xl font-bold">Total: $ {total.toFixed(2)}</p>
+                                </>
+                            )
+                        })()
                     )}
                 </div>
 

@@ -135,6 +135,7 @@ const Menu = () => {
                         />
                         <input
                             type="number"
+                            step="any"
                             placeholder="Dish Price"
                             value={newDish.dishPrice}
                             onChange={(e) => setNewDish({ ...newDish, dishPrice: e.target.value })}
