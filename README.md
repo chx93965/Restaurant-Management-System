@@ -327,3 +327,11 @@ Other actions include:
 - A **Select** button that allows the Owner to choose the restaurant to work with.
 
 Once a restaurant is selected, this choice will affect other sections such as **Menu** and **Order**. For example, if you select "KFC", clicking on the **Menu** tab will display the menu items for the KFC restaurant only.
+
+### Menu Management
+
+Once the owner selects a restaurant, they can begin making changes to the restaurant's menu. Clicking on the **Menu** tab in the navigation bar will take you to the **Menu Management** page. This page contains a form for adding new dishes, and below the form, it displays all the dishes currently on the restaurant’s menu.
+
+After a dish is added, the owner has the option to either remove it from the menu or update its basic information—such as the price—by clicking the **Edit** button. Additionally, the owner can upload an image for the dish; otherwise, a default picture will be shown.
+
+This step is crucial, as customers can only start placing orders once the menu has been created.
