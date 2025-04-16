@@ -185,7 +185,7 @@ const Menu = () => {
                             {/* Display Image */}
                             {dish.imageLocation && (
                                 <img
-                                    src={`http://localhost:5000/api/menus/${dish.id}/download`}
+                                    src={`http://localhost:5000/api/menus/${dish.id}/download?t=${Date.now()}`}
                                     alt={dish.id}
                                     className="w-40 h-40 object-cover rounded-md mt-2"
                                 />
