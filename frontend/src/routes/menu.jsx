@@ -30,6 +30,7 @@ const Menu = () => {
         dishDescription: '',
         dishPrice: ''
     });
+    const [dailySpecial, setDailySpecial] = useState(null);
 
     const navigate = useNavigate();
 
@@ -113,6 +114,15 @@ const Menu = () => {
         }
     };
 
+    const handleDailySpecial = async (dishId) => {
+        try {
+            setDailySpecial(dishId);
+            localStorage.setItem("dailySpecial", dishId);
+        } catch (error) {
+            console.error("Error setting daily special:", error);
+        }
+    }
+
     return (
         <div className="pt-20 min-h-screen bg-gray-100 py-10 px-6">
             <Navbar />
@@ -178,6 +188,15 @@ const Menu = () => {
                                         onChange={(e) => setEditDishData({ ...editDishData, dishPrice: e.target.value })}
                                         className="border p-1 rounded w-full"
                                     />
+                                    <button
+                                        onClick={() => handleDailySpecial(dish.id)}
+                                        className={`w-full py-2 rounded-lg font-semibold transition duration-200 ${
+                                            dailySpecial === dish.id ?
+                                                'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        }`}
+                                    >
+                                        Set Daily Special
+                                    </button>
                                 </div>
                             ) : (
                                 <>

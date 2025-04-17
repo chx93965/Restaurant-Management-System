@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext'; // Import the useAuth hook
 import Navbar from '../components/navBar';
 import { getAllRestaurants } from "../services/restaurant";
+import { getMenuByRestaurant } from '../services/menu';
 
 function Home() {
-    const { user, setUser, selectedRestaurant, setSelectedRestaurant } = useAuth(); // Destructure user, setUser, and selectedRestaurant from the context
+    const { user, selectedRestaurant, setSelectedRestaurant } = useAuth(); // Destructure user, setUser, and selectedRestaurant from the context
     const [allRestaurants, setAllRestaurants] = useState([]);
     const [restaurantImage, setRestaurantImage] = useState(null); // State to store the restaurant's image
+    const [allDishes, setAllDishes] = useState([]);
+    const [dailySpecial, setDailySpecial] = useState(null);
+    const [dailySpecialImage, setDailySpecialImage] = useState(null);
 
     // Fetch all restaurants for customers and servers
     useEffect(() => {
@@ -17,23 +21,39 @@ function Home() {
         }
     }, [user]);
 
+    // Fetch menu for the selected restaurant
+    useEffect(() => {
+        if (!selectedRestaurant) return;
+        getMenuByRestaurant(selectedRestaurant.id)
+            .then(setAllDishes)
+            .catch((err) => console.error(err));
+    }, [selectedRestaurant]);
+
     // Fetch restaurant image when a restaurant is selected
     useEffect(() => {
-        console.log("Selected restaurant:", localStorage); // Log the selected restaurant for debugging
-        if (selectedRestaurant) {
-            setRestaurantImage(`http://localhost:5000/api/restaurants/${selectedRestaurant.id}/download`); // Reset image state before fetching new one
-        }
+        if (!selectedRestaurant) return;
+        setRestaurantImage(`http://localhost:5000/api/restaurants/${selectedRestaurant.id}/download`); // Reset image state before fetching new one
     }, [selectedRestaurant]); // Re-run when selectedRestaurant changes
+
+    // Display daily specials
+    useEffect(() => {
+        if (!setSelectedRestaurant) return;
+
+        const dailySpecialId = localStorage.getItem('dailySpecial');
+        if (!dailySpecialId) return;
+
+        if (!allDishes) return;
+        const specialDish = allDishes.find(dish => String(dish.id) === String(dailySpecialId));
+        if (!specialDish) return;
+        setDailySpecial(specialDish);
+        setDailySpecialImage(`http://localhost:5000/api/dishes/${specialDish.id}/download`);
+
+    }, [selectedRestaurant, allDishes, dailySpecial, dailySpecialImage]);
 
     const handleRestaurantSelect = (restaurant) => {
         setSelectedRestaurant(restaurant);
     };
 
-    const handleLogout = () => {
-        setUser(null); // Clear user from context
-        setSelectedRestaurant(null);
-        localStorage.clear();
-    };
     return (
         <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-100">
             <Navbar />
@@ -60,6 +80,17 @@ function Home() {
                     ))}
                 </div>
             )}
+
+            {/* Show daily special */}
+            {dailySpecial && (
+                <div className="mt-8 text-center">
+                    <h2 className="text-lg font-semibold text-gray-800">Today's Special</h2>
+                    <img src={dailySpecialImage} alt="Daily Special" className="w-48 h-48 object-cover rounded-md shadow-md mt-2" />
+                    <p className="text-gray-600 mt-2">{dailySpecial.dishName}</p>
+                </div>
+            )}
+
+            {/* Show logout button */}
 
             {/* Show restaurant image if selectedRestaurant exists */}
             {selectedRestaurant && restaurantImage && (
