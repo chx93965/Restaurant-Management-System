@@ -26,6 +26,11 @@ const OrderPage = ({ restaurantId }) => {
             navigate('/login');
             return;
         }
+        if (!selectedRestaurant) {
+            alert("No selected Restaurant");
+            navigate("/restaurant");
+        }
+
 
         const fetchMenuAndOrders = async () => {
             if (selectedRestaurant) {

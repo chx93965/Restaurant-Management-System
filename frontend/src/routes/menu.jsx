@@ -38,6 +38,10 @@ const Menu = () => {
             alert("Unauthorized access");
             navigate("/");
         }
+        if (!selectedRestaurant) {
+            alert("No selected Restaurant");
+            navigate("/restaurant");
+        }
 
         if (selectedRestaurant) {
             const fetchMenu = async () => {
