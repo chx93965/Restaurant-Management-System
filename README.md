@@ -263,6 +263,187 @@ In addition to the basic separation of backend and frontend components, the syst
 
 Additionally, user authentication and authorization capabilities are provided. Depending on the type of account, different sets of operations will be enabled. For example, only restaurant owners can register restaurants and update menus.
 
+# Restaurant API Documentation
+
+This API manages restaurant details, menus, tables, users, and order processing.
+
+## Restaurant Endpoints
+
+### Create Restaurant
+**POST** `/api/restaurants`
+- Creates a new restaurant.
+```json
+{
+  "restaurantName": "KFC",
+  "address": "1 yonge",
+  "postCode": "abc def"
+}
+```
+
+### Get All Restaurants
+**GET** `/api/restaurants`
+- Retrieves a list of all restaurants.
+
+### Get Restaurant By ID
+**GET** `/api/restaurants`
+- Retrieves a specific restaurant by query.
+```json
+{
+  "name": "KFC",
+  "location": "1 yonge"
+}
+```
+
+### Update Restaurant
+**PUT** `/api/restaurants/1`
+- Updates details of a restaurant.
+```json
+{
+  "restaurantName": "KFC at yonge",
+  "address": "1 yonge",
+  "postCode": "abc def"
+}
+```
+
+### Upload Restaurant Image
+**POST** `/api/restaurants/upload`
+- Uploads an image for a restaurant.
+
+### Download Restaurant Image
+**POST** `/api/restaurants/download`
+- Downloads the image for a restaurant.
+
+## Table Endpoints
+
+### Set Table Layout
+**POST** `/api/restaurants/1/tables`
+- Sets the table layout for a restaurant.
+```json
+{
+  "tables": [2, 2, 2, 4, 4, 4, 10]
+}
+```
+
+### Get Table Layout
+**GET** `/api/restaurants/1/tables`
+- Retrieves the current table layout.
+
+### Add Table
+**POST** `/api/restaurants/1/tables/10`
+- Adds a table of size 10 to the restaurant.
+
+### Delete Table
+**DELETE** `/api/restaurants/tables/6`
+- Deletes a table by ID.
+
+## User Endpoints
+
+### Get All Users
+**GET** `/api/users`
+- Retrieves a list of all users.
+
+### Create User
+**POST** `/api/users`
+- Creates a new user.
+
+### User Login
+**GET** `/api/users/login`
+- Authenticates a user login.
+
+### Assign Ownership
+**POST** `/api/users/1/1`
+- Assigns a restaurant to a user.
+
+### Get Owned Restaurants
+**GET** `/api/users/1`
+- Retrieves restaurants owned by a user.
+
+## Menu Endpoints
+
+### Create Dish
+**POST** `/api/menus/dish`
+- Adds a new dish to the menu.
+```json
+{
+  "dishName": "mango salad",
+  "dishDescription": "this is salad",
+  "dishPrice": "10.99",
+  "restaurantId": 1
+}
+```
+
+### Get Dish
+**GET** `/api/menus/dish`
+- Retrieves dish information by query.
+
+### Get Dishes by Restaurant
+**GET** `/api/menus/dish`
+- Retrieves dishes filtered by restaurant.
+
+### Add Dish to Restaurant
+**POST** `/api/menus`
+- Links a dish to a restaurant.
+```json
+{
+  "restaurantId": 1,
+  "dishId": 1
+}
+```
+
+### Upload Dish Image
+**POST** `/api/menus/1/upload`
+- Uploads an image for a dish.
+
+### Download Dish Image
+**POST** `/api/menus/1/download`
+- Downloads the dish image.
+```json
+{
+  "restaurantId": 1,
+  "dishId": 1
+}
+```
+
+## Order Endpoints
+
+### Create Order
+**POST** `/api/orders`
+- Creates a new order.
+```json
+{
+  "restaurantId": 1,
+  "tableId": 1,
+  "dishes": [
+    {
+      "dishId": 1,
+      "quantity": 1
+    }
+  ]
+}
+```
+
+### Add Items to Order
+**POST** `/api/orders`
+- Adds dishes to an existing order.
+
+### Complete the Order
+**PATCH** `/api/orders/4/complete`
+- Marks the order as complete.
+
+### Delete Order
+**DELETE** `/api/orders`
+- Deletes an existing order.
+
+### Remove Items from Order
+**DELETE** `/api/orders`
+- Removes specific dishes from the order.
+
+### Get Pending Order
+**GET** `/api/orders/1/pending`
+- Retrieves the pending order for a table.
+
+
+
 ## Features
 
 The application offers basic day to day features of the restaurant. The detail explaination of all the feature that app provides is listed below.
