@@ -54,9 +54,9 @@ export const imageUpload = async (dishId, image, setUploading, setError) => {
             },
         });
         setUploading(false);
-        alert('Image uploaded successfully!');
     } catch (err) {
         setUploading(false);
         setError('Error uploading image.');
+        alert('Error uploading image');
     }
 };

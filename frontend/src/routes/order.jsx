@@ -28,7 +28,11 @@ const OrderPage = ({ restaurantId }) => {
         }
         if (!selectedRestaurant) {
             alert("No selected Restaurant");
-            navigate("/restaurant");
+            if (user.role === "owner") {
+                navigate("/restaurant");
+            } else {
+                navigate("/");
+            }
         }
 
 
@@ -355,9 +359,21 @@ const OrderPage = ({ restaurantId }) => {
                                             </li>
                                         ))}
                                     </ul>
-                                    <p className="mt-4">Subtotal: $ {subtotal.toFixed(2)}</p>
-                                    <p className="mt-1">HST (13%): $ {tax.toFixed(2)}</p>
-                                    <p className="mt-2 text-xl font-bold">Total: $ {total.toFixed(2)}</p>
+
+                                    <ul className="mt-2">
+                                        <li key="subtotal" className="flex justify-between text-gray-500 mt-1">
+                                            <span>Subtotal: </span>
+                                            <span>${subtotal.toFixed(2)}</span>
+                                        </li>
+                                        <li key="hst" className="flex justify-between text-gray-500 mt-1">
+                                            <span>HST (13%): </span>
+                                            <span>${tax.toFixed(2)}</span>
+                                        </li>
+                                        <li key="total" className="flex justify-between text-black text-xl font-bold mt-2">
+                                            <span>Total: </span>
+                                            <span>${total.toFixed(2)}</span>
+                                        </li>
+                                    </ul>
                                 </>
                             )
                         })()

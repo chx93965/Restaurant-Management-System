@@ -75,9 +75,9 @@ export const handleImageUpload = async (image, restaurantId, setUploading, setEr
             },
         });
         setUploading(false);
-        alert('Image uploaded successfully!');
     } catch (err) {
         setUploading(false);
         setError('Error uploading image.');
+        alert('Error uploading image');
     }
 };
