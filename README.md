@@ -282,16 +282,37 @@ This API manages restaurant details, menus, tables, users, and order processing.
 
 ### Get All Restaurants
 **GET** `/api/restaurants`
-- Retrieves a list of all restaurants.
+- Sampel response for retrieves a list of all restaurants.
+```json
+[
+    {
+        "id": 1,
+        "restaurantName": "KFC at yonge",
+        "address": "1 yonge aaa",
+        "postcode": "abc def",
+        "imageLocation": null
+    },
+    {
+        "id": 3,
+        "restaurantName": "McD 1",
+        "address": "1 bay street 1",
+        "postcode": "ABC DEF 1",
+        "imageLocation": "/uploads/Restaurant/1743364193180.jpeg"
+    }
+]
+```
 
 ### Get Restaurant By ID
 **GET** `/api/restaurants`
 - Retrieves a specific restaurant by query.
 ```json
 {
-  "name": "KFC",
-  "location": "1 yonge"
-}
+      "id": 1,
+      "restaurantName": "KFC at yonge",
+      "address": "1 yonge aaa",
+      "postcode": "abc def",
+      "imageLocation": null
+  },
 ```
 
 ### Update Restaurant
@@ -327,6 +348,18 @@ This API manages restaurant details, menus, tables, users, and order processing.
 ### Get Table Layout
 **GET** `/api/restaurants/1/tables`
 - Retrieves the current table layout.
+```json
+[
+    {
+        "id": 1,
+        "size": 2
+    },
+    {
+        "id": 2,
+        "size": 2
+    }
+]
+```
 
 ### Add Table
 **POST** `/api/restaurants/1/tables/10`
@@ -341,10 +374,35 @@ This API manages restaurant details, menus, tables, users, and order processing.
 ### Get All Users
 **GET** `/api/users`
 - Retrieves a list of all users.
+```json
+[
+    {
+        "id": 1,
+        "username": "jingxh",
+        "email": "aaa@aaa.com",
+        "role": "owner"
+    },
+    {
+        "id": 2,
+        "username": "Jingxian1",
+        "email": "jingxianhou823@gmail.com",
+        "role": "owner"
+    }
+]
+```
 
 ### Create User
 **POST** `/api/users`
 - Creates a new user.
+```json
+// Sample payload
+{
+    "username": "jindsagxh",
+    "email": "aadfsa@aaa.com",
+    "password": "123456",
+    "role": "owner"
+}
+```
 
 ### User Login
 **GET** `/api/users/login`
@@ -355,8 +413,27 @@ This API manages restaurant details, menus, tables, users, and order processing.
 - Assigns a restaurant to a user.
 
 ### Get Owned Restaurants
-**GET** `/api/users/1`
+**GET** `/api/users/{userId}`
 - Retrieves restaurants owned by a user.
+```json
+// Sample response
+ [
+        {
+            "id": 3,
+            "restaurantName": "McD 1",
+            "address": "1 bay street 1",
+            "postcode": "ABC DEF 1",
+            "imageLocation": "/uploads/Restaurant/1743364193180.jpeg"
+        },
+        {
+            "id": 4,
+            "restaurantName": "McD",
+            "address": "1 bay street",
+            "postcode": "ABC DEF",
+            "imageLocation": "/uploads/Restaurant/1743554751591.png"
+        }
+    ]
+```
 
 ## Menu Endpoints
 
@@ -364,6 +441,7 @@ This API manages restaurant details, menus, tables, users, and order processing.
 **POST** `/api/menus/dish`
 - Adds a new dish to the menu.
 ```json
+// Sample payload
 {
   "dishName": "mango salad",
   "dishDescription": "this is salad",
@@ -372,13 +450,29 @@ This API manages restaurant details, menus, tables, users, and order processing.
 }
 ```
 
-### Get Dish
-**GET** `/api/menus/dish`
-- Retrieves dish information by query.
 
 ### Get Dishes by Restaurant
-**GET** `/api/menus/dish`
+**GET** `/api/menus/dish/{restaurantId}`
 - Retrieves dishes filtered by restaurant.
+```json
+// Sample payload
+[
+    {
+        "id": 26,
+        "dishName": "Grilled Salmon with Lemon Butter",
+        "dishDescription": "The Fresh Atlantic salmon fillet, perfectly grilled and topped with a zesty lemon butter sauce. Served with garlic mashed potatoes and sautéed asparagus.",
+        "price": 22.99,
+        "imageLocation": "/uploads/Image/1743960657551.jpg"
+    },
+    {
+        "id": 27,
+        "dishName": "Truffle Mushroom Risotto",
+        "dishDescription": "A creamy Arborio rice risotto infused with white truffle oil, wild mushrooms, and Parmesan cheese. Garnished with fresh parsley and served with toasted baguette slices.",
+        "price": 18.99,
+        "imageLocation": "/uploads/Image/1743960742841.jpg"
+    }
+]
+```
 
 ### Add Dish to Restaurant
 **POST** `/api/menus`
@@ -391,11 +485,11 @@ This API manages restaurant details, menus, tables, users, and order processing.
 ```
 
 ### Upload Dish Image
-**POST** `/api/menus/1/upload`
+**POST** `/api/menus/{dishId}/upload`
 - Uploads an image for a dish.
 
 ### Download Dish Image
-**POST** `/api/menus/1/download`
+**POST** `/api/menus/{dishId}/download`
 - Downloads the dish image.
 ```json
 {
@@ -427,20 +521,20 @@ This API manages restaurant details, menus, tables, users, and order processing.
 - Adds dishes to an existing order.
 
 ### Complete the Order
-**PATCH** `/api/orders/4/complete`
+**PATCH** `/api/orders/{orderId}/complete`
 - Marks the order as complete.
 
 ### Delete Order
-**DELETE** `/api/orders`
+**DELETE** `/api/orders/{orderId}`
 - Deletes an existing order.
 
 ### Remove Items from Order
-**DELETE** `/api/orders`
+**DELETE** `api/order/{orderId}/items/{itemId'}`
 - Removes specific dishes from the order.
 
 ### Get Pending Order
-**GET** `/api/orders/1/pending`
-- Retrieves the pending order for a table.
+**GET** `/api/orders/{resaurantId}/pending`
+- Retrieves the pending order for a restaurant
 
 
 
