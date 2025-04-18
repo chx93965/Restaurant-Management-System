@@ -30,6 +30,7 @@ const Menu = () => {
         dishDescription: '',
         dishPrice: ''
     });
+    const [dailySpecial, setDailySpecial] = useState(null);
 
     const navigate = useNavigate();
 
@@ -113,6 +114,20 @@ const Menu = () => {
         }
     };
 
+    const handleDailySpecial = async (dishId) => {
+        try {
+            if (dailySpecial === dishId) {
+                setDailySpecial(null);
+                localStorage.removeItem("dailySpecial");
+                return;
+            }
+            setDailySpecial(dishId);
+            localStorage.setItem("dailySpecial", dishId);
+        } catch (error) {
+            console.error("Error setting daily special:", error);
+        }
+    }
+
     return (
         <div className="pt-20 min-h-screen bg-gray-100 py-10 px-6">
             <Navbar />
@@ -157,7 +172,11 @@ const Menu = () => {
                 {/* Dishes List */}
                 <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                     {dishes.map((dish) => (
-                        <div key={dish.id} className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center">
+                        <div key={dish.id} className={`p-4 rounded-lg shadow-md flex flex-col items-center ${
+                                dailySpecial === dish.id ?
+                                        'bg-pink-200' :
+                                        'bg-white'
+                                }`}>
                             {editDishId === dish.id ? (
                                 <div className="w-full space-y-1">
                                     <input
@@ -178,6 +197,16 @@ const Menu = () => {
                                         onChange={(e) => setEditDishData({ ...editDishData, dishPrice: e.target.value })}
                                         className="border p-1 rounded w-full"
                                     />
+                                    <button
+                                        onClick={() => handleDailySpecial(dish.id)}
+                                        className={`w-full py-2 rounded-lg font-semibold transition duration-200 ${
+                                            dailySpecial === dish.id ?
+                                                'bg-gray-100 text-gray-700 hover:bg-gray-300':
+                                                'bg-pink-500 text-white hover:bg-pink-700 hover:text-white' 
+                                        }`}
+                                    >
+                                        {dailySpecial === dish.id ? 'Unset Daily Special' : 'Set Daily Special'}
+                                    </button>
                                 </div>
                             ) : (
                                 <>
@@ -208,22 +237,15 @@ const Menu = () => {
                             <div className="mt-3 flex flex-wrap justify-center gap-2">
                                 <button
                                     onClick={() => handleImageUpload(dish.id)}
-                                    className="px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                                    className="px-3 py-1 bg-gray-100 text-black rounded-md hover:bg-blue-100"
                                 >
                                     Upload Image
-                                </button>
-
-                                <button
-                                    onClick={() => handleRemoveDish(dish.id)}
-                                    className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
-                                >
-                                    Remove
                                 </button>
 
                                 {editDishId === dish.id ? (
                                     <button
                                         onClick={() => handleUpdateDish(dish.id)}
-                                        className="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700"
+                                        className="px-3 py-1 bg-green-100 text-black rounded-md hover:bg-green-300"
                                     >
                                         Save
                                     </button>
@@ -237,11 +259,18 @@ const Menu = () => {
                                                 dishPrice: dish.price
                                             });
                                         }}
-                                        className="px-3 py-1 bg-yellow-600 text-white rounded-md hover:bg-yellow-700"
+                                        className="px-3 py-1 bg-gray-100 text-black rounded-md hover:bg-yellow-100"
                                     >
                                         Edit
                                     </button>
                                 )}
+
+                                <button
+                                    onClick={() => handleRemoveDish(dish.id)}
+                                    className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+                                >
+                                    Remove
+                                </button>
                             </div>
                         </div>
                     ))}

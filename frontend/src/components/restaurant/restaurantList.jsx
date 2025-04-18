@@ -46,6 +46,10 @@ const RestaurantList = ({ restaurants, setRestaurants, loading, error }) => {
     }, [restaurants]);
 
     const handleRestaurantSelect = (restaurant) => {
+        if (selectedRestaurant?.id === restaurant.id) {
+            setSelectedRestaurant(null);
+            return;
+        }
         setSelectedRestaurant(restaurant);
     };
 
@@ -343,12 +347,12 @@ const RestaurantList = ({ restaurants, setRestaurants, loading, error }) => {
                                 <button
                                     onClick={() => handleRestaurantSelect(restaurant)}
                                     className={`w-full py-2 rounded-lg font-semibold transition duration-200 ${
-                                        selectedRestaurant?.id === restaurant.id
-                                            ? 'bg-blue-500 text-white'
-                                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        selectedRestaurant?.id === restaurant.id ?
+                                            'bg-gray-100 text-gray-700 hover:bg-gray-300':
+                                            'bg-blue-100 text-gray-700 hover:bg-blue-500 hover:text-white'
                                     }`}
                                 >
-                                    {selectedRestaurant?.id === restaurant.id ? 'Selected' : 'Select'}
+                                    {selectedRestaurant?.id === restaurant.id ? 'Unselect' : 'Select'}
                                 </button>
 
                                 {/* Balance Sheet Generator */}
