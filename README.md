@@ -518,6 +518,80 @@ After a dish is added, the owner has the option to either remove it from the men
 This step is crucial, as customers can only start placing orders once the menu has been created.
 
 
+
+# Restaurant Management System
+
+This is a simple restaurant management system built with Node.js, SQLite3, and Vite for the frontend.
+
+## Prerequisites
+
+Before running the project, ensure you have the following installed:
+
+- **Node.js** (v22.13.1)  
+  Check by running:
+  ```bash
+  node -v
+  ```
+
+- **npm** (v10.9.2)  
+  Check by running:
+  ```bash
+  npm -v
+  ```
+
+>Note: This project uses **SQLite3**, so there is **no need to set up PostgreSQL**.
+
+## Getting the Code
+
+You can obtain the project code in one of two ways:
+
+### Option 1: Clone the Repository
+
+```bash
+git clone https://github.com/chx93965/Restaurant-Management-System.git
+```
+
+### Option 2: Download the ZIP
+
+If the code has been uploaded as a zip file, simply unzip it to your desired directory.
+
+## Running the Application
+
+Make sure that ports **5000** and **5173** are free on your local machine.
+
+### 1. Start the Backend
+
+```bash
+cd backend
+npm install
+node server.js
+```
+
+This starts the backend server at `http://localhost:5000`.
+
+### 2. Start the Frontend
+
+Open a **new terminal**:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend will start at `http://localhost:5173`.
+
+
+## Individual Contribution
+
+### Jingxian Hou
+
+I contributed to building the core user authentication functionalities, including user sign-up and login. This involved creating a registration page with input validations to ensure unique email addresses and usernames, as well as implementing backend verification to match the submitted credentials against stored user records during login.
+
+Additionally, I developed features for restaurant and menu management. This includes API endpoints for creating restaurants, uploading restaurant images, selecting a restaurant, and generating a CSV-format balance sheet. On the frontend, I built the restaurant menu page, where users can create and update dishes, upload dish images, and view all menu items on the order page. I handled both the frontend components and backend logic for these features.
+
+To enhance user experience, I also implemented small but impactful improvements, such as redirecting users to the login page if they are not authenticated, regardless of which action they try to take. Furthermore, any updates to restaurant metadata or images are reflected in real-time on the UI without requiring a page refresh.
+
 ## Lessons Learned
 
 One important lesson learned from building this application is the importance of properly designing the system architecture before jumping into implementation. Without a solid design, making changes later—especially to the database schema—can become extremely difficult and time-consuming.
