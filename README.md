@@ -6,150 +6,401 @@
 | Jingxian Hou             | 1001159710     | jingxian.hou@mail.utoronto.ca    |
 | Hanxiao Chang            | 1006341709     | Hanxiao.chang@mail.utoronto.ca   |
 
+## Table of Contents
+- [Proposal](./Proposal.md)
+- [Motivation](#motivation)
+- [Objectives](#objectives)
+- [Features](#features)
+- [User Guide](#user-guide)
+- [Tech Stacks](#tech-stacks)
+- [Development Guide](#development-guide)
+- [Contributions](#individual-contribution)
+- [Video Demo](./demo.mp4)
+- [Lessons Learned](#lessons-learned)
+- [Conclusion](#conclusion)
+
+
 ## Motivation
 
 The restaurant industry in Toronto's downtown area is fast-paced. Apart from the food quality, the customer satisfaction primarily depends on the effectiveness and efficiency of restaurant services, especially the time and effort spent in ordering food, calling services, checking out, etc. Despite the growth of customer volume and the need for innovative technology, many restaurants still follow a traditional approach to manage customer orders, such as phone call reservations and pen-and-paper order taking. This outdated approach often causes issues like long waiting times, mismanaged reservations, order errors, and lack of streamlined communication between customers and staff. Additionally, restaurant managers face challenges in tracking cash flow and summarizing financial data without digitized balance sheets.
 
 We aim to introduce a new approach in restaurant management to improve the quality of customer services among the restaurant workflow by creating an integrated digital platform for clients, waitstaff, and managers. This application features fast and simplified table reservation, table status monitoring, and online order management. It also improves operational efficiency through cash flow tracking and performance reporting. There are similar applications like Uber Eats, which facilitate takeout orders, while this platform is designed to complement eat-in services in restaurants. 
 
+---
+
+There are many applications such as DoorDash and Uber Eats created for consumers to make it easy to order food online and have it delivered to their homes. However, there are not many applications for restaurant owners to manage their day-to-day activities, such as updating menus, checking balance sheets, and taking dine-in orders. 
+
+We recognize that there is a huge market for this, as many small restaurants still rely on waitstaff writing down customers' orders on paper. This often results in misplaced orders, which can negatively impact the restaurant. Additionally, menus are often printed on paper, and when inflation occurs, restaurants must constantly reprint the menu to update prices.
+
 
 ## Objective and Key Features
 
 The goal of this project is to develop a management system that handles and records daily restaurant operations. The system consists of three interconnected applications, including client-end, waiter-end, and manager-end, for the purpose of reducing human effort, digitizing paper works, minimizing errors, and improving efficiencies in order processing and financial management.
 
+---
+
+The objective of this project is to create an application that helps restaurant owners and employees digitize and simplify their daily operations. 
+
+For owners, they can register restaurants and customize menus for each location, including uploading images and updating prices. The menu will be automatically synced with employees. Employees will be able to place orders for dine-in customers and complete the order once payment is made.
+
+The application is designed to be straightforward and easy to use. It serves as a centralized place to store all activities, eliminating the need to record information on paper and reducing the risk of data loss. Most importantly, balance sheets can be generated easily with a simple button click, so restaurant owners do not need to hire accountants to calculate each order. All information can be retrieved easily with just a few clicks.
+
+
+## Features
+
+The application offers basic day to day features of the restaurant. The detail explaination of all the feature that app provides is listed below.
+
+---
+
+### Authentication and Authorization
+
+The application allows user to create an account with username and password. When creating account the user has to specify if the account is for owner, employee or customer. Different types of the account can perform different set of actions Owner can manage restaurant by creating restaurant profile such as create restaurant and update the pictures of the restaurant. employees can place orders for the customer.
+
+---
+
+### Restaurant Management
+
+The feature is only for restaurants owners, owner can create restaurants with name and address as well as the table layout. The layout is simplified by only specifying the number of tables and number of seats for each table. The owner can also upload an profile image for the restaurant. The owner can also generate a balance sheet for a given year. The balance sheet will be downloaded as a csv file listing all the completed order within that calendar year. The owner can also remove the restuarnt from the ownership. Since each owner can own multiple restaurants so the owner can select a resturant to work with. The restuarnt picture as well as the Menu and orders will change based on the selected restaurant.
+
+---
+
+### Menu Management
+
+Owner can also create dish for a restaurant menu. To create a dish owner can specify a dish name, dish description as well as the price. Owner can also upload the image for the dish, this dish will be shown when employee place the order. There will be Edit and Remove buttons for the dish to remove item from the menu or update the basic information of the dish.
+
+---
+
+### Order Management
+
+Owner and Employee can place the order for the customer. If the Order type is dine in the employee will seect the table that the customer is sat on and all the items from the menu will be shown and employee can add the dish to the order. Once submt the order the pending orders is shwon for each table and the employee can complete the order once the purchase is completed. To make employee’s work simplay the toatal price for each peniding order is also shown.
+
+## User Guide
+
+### Login and Sign Up
+
+The default URL for the application is [http://localhost:5173/](http://localhost:5173/). Upon opening the page, you will see a welcome message for the Restaurant Application. At the top, there is a navigation panel with default tabs: **Home**, **Order**, and **Profile**. However, if you are not logged in, clicking any of these tabs will redirect you to the Login page.
+
+To begin, you need to create an account by clicking on the **Sign Up** button.
+
+During the sign-up process, you can choose from three roles: **Customer**, **Owner**, or **Server**. Passwords are encrypted following standard practices, and you will be able to see the characters you type. After successfully creating an account, you will be redirected to the Login page.
+
+The login form contains fields for your username and password. If the username does not exist, an error message will display: `"Invalid username"`. If the password is incorrect, the error will read: `"Invalid password"`. Once successfully logged in, you will be redirected to the Home page. At this point, the navigation panel may change depending on your user role. For example, if you are logged in as an **Owner**, you will now see additional options such as **Create Menu** and **Order**.
+![Alt Text](https://example.com/image.jpg)
+
+### Restaurant Management
+
+Initially, you will not own any restaurants. You will be presented with a form to create a new restaurant. Below the form, a list of restaurants you own will be displayed. If you do not own any, a message will inform you accordingly.
+
+To create a restaurant, you must provide the following information:
+
+- Restaurant name
+- Address
+- Postal code
+- Number of tables
+- Capacity per table
+
+This information can be updated later. The form includes basic validation—for example, if you try to submit without entering a restaurant name, an error message will appear stating that the field is required.
+
+Once submitted, a new restaurant card will be created displaying all the information you provided. Below the restaurant name and address, you will find an **Edit** button to modify the basic information or adjust the number of tables. You also have the option to **upload an image** for the restaurant.
+
+Other actions include:
+
+- A **Delete** button (red) to remove the restaurant.
+- An option for the **Owner** to generate a balance sheet (explained later).
+- A **Select** button that allows the Owner to choose the restaurant to work with.
+
+Once a restaurant is selected, this choice will affect other sections such as **Menu** and **Order**. For example, if you select "KFC", clicking on the **Menu** tab will display the menu items for the KFC restaurant only.
+
+### Menu Management
+
+Once the owner selects a restaurant, they can begin making changes to the restaurant's menu. Clicking on the **Menu** tab in the navigation bar will take you to the **Menu Management** page. This page contains a form for adding new dishes, and below the form, it displays all the dishes currently on the restaurant’s menu.
+
+After a dish is added, the owner has the option to either remove it from the menu or update its basic information—such as the price—by clicking the **Edit** button. Additionally, the owner can upload an image for the dish; otherwise, a default picture will be shown.
+
+This step is crucial, as customers can only start placing orders once the menu has been created.
+
+
+## Tech Stacks
+
+The frontend was built with the React framework using JavaScript. Styling was implemented with Tailwind CSS and Shadcn. 
+
+The backend was developed using Express.js with an SQLite3 database. All API endpoints follow RESTful API design principles.
+
+In addition to the basic separation of backend and frontend components, the system also offers advanced features such as file handling and processing. This supports menu and restaurant image uploads and downloads, as well as balance sheet generation. 
+
+Additionally, user authentication and authorization capabilities are provided. Depending on the type of account, different sets of operations will be enabled. For example, only restaurant owners can register restaurants and update menus.
+
+
+### Restaurant API Endpoints
+
+#### Create Restaurant
+**POST** `/api/restaurants`
+- Creates a new restaurant.
+```json
+{
+  "restaurantName": "KFC",
+  "address": "1 yonge",
+  "postCode": "abc def"
+}
 ```
-*** must have
-**  should have
-*   nice to have
+
+#### Get All Restaurants
+**GET** `/api/restaurants`
+- Sampel response for retrieves a list of all restaurants.
+```json
+[
+    {
+        "id": 1,
+        "restaurantName": "KFC at yonge",
+        "address": "1 yonge aaa",
+        "postcode": "abc def",
+        "imageLocation": null
+    },
+    {
+        "id": 3,
+        "restaurantName": "McD 1",
+        "address": "1 bay street 1",
+        "postcode": "ABC DEF 1",
+        "imageLocation": "/uploads/Restaurant/1743364193180.jpeg"
+    }
+]
 ```
 
-### General Features
-#### User Authentication and Authorization ( *** )
-- Unique user accounts with role-based access control
+#### Get Restaurant By ID
+**GET** `/api/restaurants`
+- Retrieves a specific restaurant by query.
+```json
+{
+      "id": 1,
+      "restaurantName": "KFC at yonge",
+      "address": "1 yonge aaa",
+      "postcode": "abc def",
+      "imageLocation": null
+  },
+```
+
+#### Update Restaurant
+**PUT** `/api/restaurants/1`
+- Updates details of a restaurant.
+```json
+{
+  "restaurantName": "KFC at yonge",
+  "address": "1 yonge",
+  "postCode": "abc def"
+}
+```
+
+#### Upload Restaurant Image
+**POST** `/api/restaurants/upload`
+- Uploads an image for a restaurant.
+
+#### Download Restaurant Image
+**POST** `/api/restaurants/download`
+- Downloads the image for a restaurant.
+
+### Table API Endpoints
+
+#### Set Table Layout
+**POST** `/api/restaurants/1/tables`
+- Sets the table layout for a restaurant.
+```json
+{
+  "tables": [2, 2, 2, 4, 4, 4, 10]
+}
+```
+
+#### Get Table Layout
+**GET** `/api/restaurants/1/tables`
+- Retrieves the current table layout.
+```json
+[
+    {
+        "id": 1,
+        "size": 2
+    },
+    {
+        "id": 2,
+        "size": 2
+    }
+]
+```
+
+#### Add Table
+**POST** `/api/restaurants/1/tables/10`
+- Adds a table of size 10 to the restaurant.
+
+#### Delete Table
+**DELETE** `/api/restaurants/tables/6`
+- Deletes a table by ID.
+
+### User API Endpoints
+
+#### Get All Users
+**GET** `/api/users`
+- Retrieves a list of all users.
+```json
+[
+    {
+        "id": 1,
+        "username": "jingxh",
+        "email": "aaa@aaa.com",
+        "role": "owner"
+    },
+    {
+        "id": 2,
+        "username": "Jingxian1",
+        "email": "jingxianhou823@gmail.com",
+        "role": "owner"
+    }
+]
+```
+
+#### Create User
+**POST** `/api/users`
+- Creates a new user.
+```json
+// Sample payload
+{
+    "username": "jindsagxh",
+    "email": "aadfsa@aaa.com",
+    "password": "123456",
+    "role": "owner"
+}
+```
+
+#### User Login
+**GET** `/api/users/login`
+- Authenticates a user login.
+
+#### Assign Ownership
+**POST** `/api/users/1/1`
+- Assigns a restaurant to a user.
+
+#### Get Owned Restaurants
+**GET** `/api/users/{userId}`
+- Retrieves restaurants owned by a user.
+```json
+// Sample response
+ [
+        {
+            "id": 3,
+            "restaurantName": "McD 1",
+            "address": "1 bay street 1",
+            "postcode": "ABC DEF 1",
+            "imageLocation": "/uploads/Restaurant/1743364193180.jpeg"
+        },
+        {
+            "id": 4,
+            "restaurantName": "McD",
+            "address": "1 bay street",
+            "postcode": "ABC DEF",
+            "imageLocation": "/uploads/Restaurant/1743554751591.png"
+        }
+    ]
+```
+
+### Menu API Endpoints
+
+#### Create Dish
+**POST** `/api/menus/dish`
+- Adds a new dish to the menu.
+```json
+// Sample payload
+{
+  "dishName": "mango salad",
+  "dishDescription": "this is salad",
+  "dishPrice": "10.99",
+  "restaurantId": 1
+}
+```
 
 
-### Client-End Application
+#### Get Dishes by Restaurant
+**GET** `/api/menus/dish/{restaurantId}`
+- Retrieves dishes filtered by restaurant.
+```json
+// Sample payload
+[
+    {
+        "id": 26,
+        "dishName": "Grilled Salmon with Lemon Butter",
+        "dishDescription": "The Fresh Atlantic salmon fillet, perfectly grilled and topped with a zesty lemon butter sauce. Served with garlic mashed potatoes and sautéed asparagus.",
+        "price": 22.99,
+        "imageLocation": "/uploads/Image/1743960657551.jpg"
+    },
+    {
+        "id": 27,
+        "dishName": "Truffle Mushroom Risotto",
+        "dishDescription": "A creamy Arborio rice risotto infused with white truffle oil, wild mushrooms, and Parmesan cheese. Garnished with fresh parsley and served with toasted baguette slices.",
+        "price": 18.99,
+        "imageLocation": "/uploads/Image/1743960742841.jpg"
+    }
+]
+```
 
-#### Restaurant Information Display ( * )
-- Display of restaurant location and contact information
-Menu item photos and promotional images
-- Announcements and news section for updates and special events
+#### Add Dish to Restaurant
+**POST** `/api/menus`
+- Links a dish to a restaurant.
+```json
+{
+  "restaurantId": 1,
+  "dishId": 1
+}
+```
 
-#### Table Reservation ( *** )
-- Real-time table booking system with table selection interface
-- Option to provide reservation details and pay a deposit online
-- Confirmation notifications and reminders for reservations
-- Virtual waiting list for when all tables are occupied
-- Real-time updates on waiting status and estimated wait time
+#### Upload Dish Image
+**POST** `/api/menus/{dishId}/upload`
+- Uploads an image for a dish.
 
-#### Table Opening ( *** )
-- QR code scanning to automatically open and link the customer’s table to the app
-- Transition from reservation to table service
+### Download Dish Image
+**POST** `/api/menus/{dishId}/download`
+- Downloads the dish image.
+```json
+{
+  "restaurantId": 1,
+  "dishId": 1
+}
+```
 
-#### Service Call ( ** )
-- In-app feature to call a waiter for service directly from the customer’s table
+### Order API Endpoints
 
-#### Order Management ( *** )
-- Self-service ordering interface for food and beverage selection
-- Real-time order status tracking and modification
+#### Create Order
+**POST** `/api/orders`
+- Creates a new order.
+```json
+{
+  "restaurantId": 1,
+  "tableId": 1,
+  "dishes": [
+    {
+      "dishId": 1,
+      "quantity": 1
+    }
+  ]
+}
+```
 
-#### Payment ( ** )
-- Flexible payment options pay immediately after ordering or pay later
-- Multiple payment methods credit card, member balance, and coupons
-- Options of merging multiple orders from the same table into a single bill
+#### Add Items to Order
+**POST** `/api/orders`
+- Adds dishes to an existing order.
 
-#### Membership Center ( * )
-- One-click registration by scanning a QR code
-- Display of member balance, bonus credits, and points
-- Membership recharge options standard and package recharges
-- Membership levels with corresponding discount rates
+#### Complete the Order
+**PATCH** `/api/orders/{orderId}/complete`
+- Marks the order as complete.
 
-#### Coupons and Vouchers ( * )
-- Product-specific coupons and general discount vouchers
-- Integration with third-party platforms for voucher redemption
+#### Delete Order
+**DELETE** `/api/orders/{orderId}`
+- Deletes an existing order.
 
-#### Takeaway Service ( * )
-- Option to place takeaway orders with delivery
+#### Remove Items from Order
+**DELETE** `api/order/{orderId}/items/{itemId'}`
+- Removes specific dishes from the order.
 
-#### Points Shop ( * )
-- Redeem accumulated points for products, discounts, or third-party offerings
+#### Get Pending Order
+**GET** `/api/orders/{resaurantId}/pending`
+- Retrieves the pending order for a restaurant
 
-
-### Waiter-End Application
-
-#### Real-Time Table Status ( *** )
-- Dashboard showing table occupancy status
-- Display of reservation details, order history, consumption amount, and payment status
-
-#### Reservation Management ( *** )
-- Manual reservation entry and status inquiries
-
-#### Table Operations ( *** )
-- Open, transfer, and clear tables
-
-#### Order Management ( *** )
-- Place and modify orders on behalf of customers
-
-#### Payment Processing ( ** )
-- Support for various payment methods, including credit card, member balance, and coupons
-
-#### Member Management ( * )
-- Recharge member accounts on behalf of customers
-
-#### Performance Reports ( ** )
-- Sales and service performance rankings
-- Order and revenue summary reports
-
-
-### Manager-End System
-
-#### Restaurant Management ( *** )
-- Display and manage restaurant information, including location, contact details, and promotional material
-- Manage and update staff accounts
-
-#### Staff Permissions Management ( *** )
-- Role-based access control for reservations, order management, and reports
-
-#### Inventory Management ( * )
-- Track warehouse stock and conduct cost analysis
-- Generate balance sheets for inventory management
-
-#### Product Management ( *** )
-- Add, categorize, and price menu items
-- Manage discounts and item availability
-- Upload images for cuisines 
-
-#### Order Management ( *** )
-- Track reservations, orders, and payment statuses
-- Upload and download receipts as image files
-
-#### Reports and Analysis ( ** )
-- Generate sales reports and revenue analysis
-
-#### Member Management ( * )
-- View and manage member data, balances, and transaction history
-
-
-### Technical Details
-
-We will develop a full-stack web application using **Option B** from the architecture design. The system will be built with separate frontend and backend components:
-#### Frontend
-- We will use React with Tailwind CSS for a modern and responsive user interface. Additionally, we will integrate shadcn/ui to enhance the frontend experience. The frontend will be highly responsive, allowing users to interact with the application to perform various realistic restaurant management operations
-#### Backend
-- Express.js with a RESTful API for client-server communication
-- PostgreSQL/SQLite3 database with normalized schema
-- Cloud storage AWS S3 for images and documents
-- External integrations of payment gateways, third-party voucher platforms
-#### Advanced Feature
-- We are going to implement authentication and authorization since the application allows users to create accounts to perform various actions based on the permission model.
-- The system also includes file handling and processing, such as menu and image uploads, as well as balance sheet downloads.
-
-
-#### Database Schema and Relationships
-
-The database will be designed to efficiently store restaurant-related data, including user roles, menus, orders, and financial transactions. Relationships will be structured to allow seamless data retrieval and management.
-
-##### SQL Schema
+### SQL Schema
 
 ```sql
 CREATE TABLE users (
@@ -227,397 +478,10 @@ CREATE TABLE orderItems (
 );
 ```
 
-##### File Storage Requirements
 
-The system will support file storage for:
-- Dish image uploads, menu PDF uploads, receipt uploads, and cash flow statement generation and downloads.
-- Uploading and downloading PDF versions of menus and balance sheets.
 
-This project aims to enhance restaurant management by providing a comprehensive digital solution, reducing human errors, and streamlining operations.
 
-
-## Contributions
-
-
-## Motivation
-
-There are many applications such as DoorDash and Uber Eats created for consumers to make it easy to order food online and have it delivered to their homes. However, there are not many applications for restaurant owners to manage their day-to-day activities, such as updating menus, checking balance sheets, and taking dine-in orders. 
-
-We recognize that there is a huge market for this, as many small restaurants still rely on waitstaff writing down customers' orders on paper. This often results in misplaced orders, which can negatively impact the restaurant. Additionally, menus are often printed on paper, and when inflation occurs, restaurants must constantly reprint the menu to update prices.
-
-## Objectives
-
-The objective of this project is to create an application that helps restaurant owners and employees digitize and simplify their daily operations. 
-
-For owners, they can register restaurants and customize menus for each location, including uploading images and updating prices. The menu will be automatically synced with employees. Employees will be able to place orders for dine-in customers and complete the order once payment is made.
-
-The application is designed to be straightforward and easy to use. It serves as a centralized place to store all activities, eliminating the need to record information on paper and reducing the risk of data loss. Most importantly, balance sheets can be generated easily with a simple button click, so restaurant owners do not need to hire accountants to calculate each order. All information can be retrieved easily with just a few clicks.
-
-## Tech Stacks
-
-The frontend was built with the React framework using JavaScript. Styling was implemented with Tailwind CSS and Shadcn. 
-
-The backend was developed using Express.js with an SQLite3 database. All API endpoints follow RESTful API design principles.
-
-In addition to the basic separation of backend and frontend components, the system also offers advanced features such as file handling and processing. This supports menu and restaurant image uploads and downloads, as well as balance sheet generation. 
-
-Additionally, user authentication and authorization capabilities are provided. Depending on the type of account, different sets of operations will be enabled. For example, only restaurant owners can register restaurants and update menus.
-
-# Restaurant API Documentation
-
-This API manages restaurant details, menus, tables, users, and order processing.
-
-## Restaurant Endpoints
-
-### Create Restaurant
-**POST** `/api/restaurants`
-- Creates a new restaurant.
-```json
-{
-  "restaurantName": "KFC",
-  "address": "1 yonge",
-  "postCode": "abc def"
-}
-```
-
-### Get All Restaurants
-**GET** `/api/restaurants`
-- Sampel response for retrieves a list of all restaurants.
-```json
-[
-    {
-        "id": 1,
-        "restaurantName": "KFC at yonge",
-        "address": "1 yonge aaa",
-        "postcode": "abc def",
-        "imageLocation": null
-    },
-    {
-        "id": 3,
-        "restaurantName": "McD 1",
-        "address": "1 bay street 1",
-        "postcode": "ABC DEF 1",
-        "imageLocation": "/uploads/Restaurant/1743364193180.jpeg"
-    }
-]
-```
-
-### Get Restaurant By ID
-**GET** `/api/restaurants`
-- Retrieves a specific restaurant by query.
-```json
-{
-      "id": 1,
-      "restaurantName": "KFC at yonge",
-      "address": "1 yonge aaa",
-      "postcode": "abc def",
-      "imageLocation": null
-  },
-```
-
-### Update Restaurant
-**PUT** `/api/restaurants/1`
-- Updates details of a restaurant.
-```json
-{
-  "restaurantName": "KFC at yonge",
-  "address": "1 yonge",
-  "postCode": "abc def"
-}
-```
-
-### Upload Restaurant Image
-**POST** `/api/restaurants/upload`
-- Uploads an image for a restaurant.
-
-### Download Restaurant Image
-**POST** `/api/restaurants/download`
-- Downloads the image for a restaurant.
-
-## Table Endpoints
-
-### Set Table Layout
-**POST** `/api/restaurants/1/tables`
-- Sets the table layout for a restaurant.
-```json
-{
-  "tables": [2, 2, 2, 4, 4, 4, 10]
-}
-```
-
-### Get Table Layout
-**GET** `/api/restaurants/1/tables`
-- Retrieves the current table layout.
-```json
-[
-    {
-        "id": 1,
-        "size": 2
-    },
-    {
-        "id": 2,
-        "size": 2
-    }
-]
-```
-
-### Add Table
-**POST** `/api/restaurants/1/tables/10`
-- Adds a table of size 10 to the restaurant.
-
-### Delete Table
-**DELETE** `/api/restaurants/tables/6`
-- Deletes a table by ID.
-
-## User Endpoints
-
-### Get All Users
-**GET** `/api/users`
-- Retrieves a list of all users.
-```json
-[
-    {
-        "id": 1,
-        "username": "jingxh",
-        "email": "aaa@aaa.com",
-        "role": "owner"
-    },
-    {
-        "id": 2,
-        "username": "Jingxian1",
-        "email": "jingxianhou823@gmail.com",
-        "role": "owner"
-    }
-]
-```
-
-### Create User
-**POST** `/api/users`
-- Creates a new user.
-```json
-// Sample payload
-{
-    "username": "jindsagxh",
-    "email": "aadfsa@aaa.com",
-    "password": "123456",
-    "role": "owner"
-}
-```
-
-### User Login
-**GET** `/api/users/login`
-- Authenticates a user login.
-
-### Assign Ownership
-**POST** `/api/users/1/1`
-- Assigns a restaurant to a user.
-
-### Get Owned Restaurants
-**GET** `/api/users/{userId}`
-- Retrieves restaurants owned by a user.
-```json
-// Sample response
- [
-        {
-            "id": 3,
-            "restaurantName": "McD 1",
-            "address": "1 bay street 1",
-            "postcode": "ABC DEF 1",
-            "imageLocation": "/uploads/Restaurant/1743364193180.jpeg"
-        },
-        {
-            "id": 4,
-            "restaurantName": "McD",
-            "address": "1 bay street",
-            "postcode": "ABC DEF",
-            "imageLocation": "/uploads/Restaurant/1743554751591.png"
-        }
-    ]
-```
-
-## Menu Endpoints
-
-### Create Dish
-**POST** `/api/menus/dish`
-- Adds a new dish to the menu.
-```json
-// Sample payload
-{
-  "dishName": "mango salad",
-  "dishDescription": "this is salad",
-  "dishPrice": "10.99",
-  "restaurantId": 1
-}
-```
-
-
-### Get Dishes by Restaurant
-**GET** `/api/menus/dish/{restaurantId}`
-- Retrieves dishes filtered by restaurant.
-```json
-// Sample payload
-[
-    {
-        "id": 26,
-        "dishName": "Grilled Salmon with Lemon Butter",
-        "dishDescription": "The Fresh Atlantic salmon fillet, perfectly grilled and topped with a zesty lemon butter sauce. Served with garlic mashed potatoes and sautéed asparagus.",
-        "price": 22.99,
-        "imageLocation": "/uploads/Image/1743960657551.jpg"
-    },
-    {
-        "id": 27,
-        "dishName": "Truffle Mushroom Risotto",
-        "dishDescription": "A creamy Arborio rice risotto infused with white truffle oil, wild mushrooms, and Parmesan cheese. Garnished with fresh parsley and served with toasted baguette slices.",
-        "price": 18.99,
-        "imageLocation": "/uploads/Image/1743960742841.jpg"
-    }
-]
-```
-
-### Add Dish to Restaurant
-**POST** `/api/menus`
-- Links a dish to a restaurant.
-```json
-{
-  "restaurantId": 1,
-  "dishId": 1
-}
-```
-
-### Upload Dish Image
-**POST** `/api/menus/{dishId}/upload`
-- Uploads an image for a dish.
-
-### Download Dish Image
-**POST** `/api/menus/{dishId}/download`
-- Downloads the dish image.
-```json
-{
-  "restaurantId": 1,
-  "dishId": 1
-}
-```
-
-## Order Endpoints
-
-### Create Order
-**POST** `/api/orders`
-- Creates a new order.
-```json
-{
-  "restaurantId": 1,
-  "tableId": 1,
-  "dishes": [
-    {
-      "dishId": 1,
-      "quantity": 1
-    }
-  ]
-}
-```
-
-### Add Items to Order
-**POST** `/api/orders`
-- Adds dishes to an existing order.
-
-### Complete the Order
-**PATCH** `/api/orders/{orderId}/complete`
-- Marks the order as complete.
-
-### Delete Order
-**DELETE** `/api/orders/{orderId}`
-- Deletes an existing order.
-
-### Remove Items from Order
-**DELETE** `api/order/{orderId}/items/{itemId'}`
-- Removes specific dishes from the order.
-
-### Get Pending Order
-**GET** `/api/orders/{resaurantId}/pending`
-- Retrieves the pending order for a restaurant
-
-
-
-## Features
-
-The application offers basic day to day features of the restaurant. The detail explaination of all the feature that app provides is listed below.
-
----
-
-### Authentication and Authorization
-
-The application allows user to create an account with username and password. When creating account the user has to specify if the account is for owner, employee or customer. Different types of the account can perform different set of actions Owner can manage restaurant by creating restaurant profile such as create restaurant and update the pictures of the restaurant. employees can place orders for the customer.
-
----
-
-### Restaurant Management
-
-The feature is only for restaurants owners, owner can create restaurants with name and address as well as the table layout. The layout is simplified by only specifying the number of tables and number of seats for each table. The owner can also upload an profile image for the restaurant. The owner can also generate a balance sheet for a given year. The balance sheet will be downloaded as a csv file listing all the completed order within that calendar year. The owner can also remove the restuarnt from the ownership. Since each owner can own multiple restaurants so the owner can select a resturant to work with. The restuarnt picture as well as the Menu and orders will change based on the selected restaurant.
-
----
-
-### Menu Management
-
-Owner can also create dish for a restaurant menu. To create a dish owner can specify a dish name, dish description as well as the price. Owner can also upload the image for the dish, this dish will be shown when employee place the order. There will be Edit and Remove buttons for the dish to remove item from the menu or update the basic information of the dish.
-
----
-
-### Order Management
-
-Owner and Employee can place the order for the customer. If the Order type is dine in the employee will seect the table that the customer is sat on and all the items from the menu will be shown and employee can add the dish to the order. Once submt the order the pending orders is shwon for each table and the employee can complete the order once the purchase is completed. To make employee’s work simplay the toatal price for each peniding order is also shown.
-
-## User Guide
-
-### Login and Sign Up
-
-The default URL for the application is [http://localhost:5173/](http://localhost:5173/). Upon opening the page, you will see a welcome message for the Restaurant Application. At the top, there is a navigation panel with default tabs: **Home**, **Order**, and **Profile**. However, if you are not logged in, clicking any of these tabs will redirect you to the Login page.
-
-To begin, you need to create an account by clicking on the **Sign Up** button.
-
-During the sign-up process, you can choose from three roles: **Customer**, **Owner**, or **Server**. Passwords are encrypted following standard practices, and you will be able to see the characters you type. After successfully creating an account, you will be redirected to the Login page.
-
-The login form contains fields for your username and password. If the username does not exist, an error message will display: `"Invalid username"`. If the password is incorrect, the error will read: `"Invalid password"`. Once successfully logged in, you will be redirected to the Home page. At this point, the navigation panel may change depending on your user role. For example, if you are logged in as an **Owner**, you will now see additional options such as **Create Menu** and **Order**.
-![Alt Text](https://example.com/image.jpg)
-
-### Restaurant Management
-
-Initially, you will not own any restaurants. You will be presented with a form to create a new restaurant. Below the form, a list of restaurants you own will be displayed. If you do not own any, a message will inform you accordingly.
-
-To create a restaurant, you must provide the following information:
-
-- Restaurant name
-- Address
-- Postal code
-- Number of tables
-- Capacity per table
-
-This information can be updated later. The form includes basic validation—for example, if you try to submit without entering a restaurant name, an error message will appear stating that the field is required.
-
-Once submitted, a new restaurant card will be created displaying all the information you provided. Below the restaurant name and address, you will find an **Edit** button to modify the basic information or adjust the number of tables. You also have the option to **upload an image** for the restaurant.
-
-Other actions include:
-
-- A **Delete** button (red) to remove the restaurant.
-- An option for the **Owner** to generate a balance sheet (explained later).
-- A **Select** button that allows the Owner to choose the restaurant to work with.
-
-Once a restaurant is selected, this choice will affect other sections such as **Menu** and **Order**. For example, if you select "KFC", clicking on the **Menu** tab will display the menu items for the KFC restaurant only.
-
-### Menu Management
-
-Once the owner selects a restaurant, they can begin making changes to the restaurant's menu. Clicking on the **Menu** tab in the navigation bar will take you to the **Menu Management** page. This page contains a form for adding new dishes, and below the form, it displays all the dishes currently on the restaurant’s menu.
-
-After a dish is added, the owner has the option to either remove it from the menu or update its basic information—such as the price—by clicking the **Edit** button. Additionally, the owner can upload an image for the dish; otherwise, a default picture will be shown.
-
-This step is crucial, as customers can only start placing orders once the menu has been created.
-
-
-
-# Restaurant Management System
-
-This is a simple restaurant management system built with Node.js, SQLite3, and Vite for the frontend.
-
-## Prerequisites
+## Development Guide
 
 Before running the project, ensure you have the following installed:
 
@@ -635,25 +499,25 @@ Before running the project, ensure you have the following installed:
 
 >Note: This project uses **SQLite3**, so there is **no need to set up PostgreSQL**.
 
-## Getting the Code
+### Getting the Code
 
 You can obtain the project code in one of two ways:
 
-### Option 1: Clone the Repository
+#### Option 1: Clone the Repository
 
 ```bash
 git clone https://github.com/chx93965/Restaurant-Management-System.git
 ```
 
-### Option 2: Download the ZIP
+#### Option 2: Download the ZIP
 
 If the code has been uploaded as a zip file, simply unzip it to your desired directory.
 
-## Running the Application
+### Running the Application
 
 Make sure that ports **5000** and **5173** are free on your local machine.
 
-### 1. Start the Backend
+#### 1. Start the Backend
 
 ```bash
 cd backend
@@ -663,7 +527,7 @@ node server.js
 
 This starts the backend server at `http://localhost:5000`.
 
-### 2. Start the Frontend
+#### 2. Start the Frontend
 
 Open a **new terminal**:
 
@@ -688,7 +552,7 @@ To enhance user experience, I also implemented small but impactful improvements,
 
 ## Lessons Learned
 
-One important lesson learned from building this application is the importance of properly designing the system architecture before jumping into implementation. Without a solid design, making changes later—especially to the database schema—can become extremely difficult and time-consuming.
+One important lesson learned from building this application is properly designing the system architecture before jumping into implementation. Without a solid design, making changes later—especially to the database schema—can become extremely difficult and time-consuming.
 
 For example, in the initial design, the `user` table included a field to indicate the restaurant a user owns. Later, we realized that an owner may manage multiple restaurants. This required us to normalize the schema and introduce a new table to map users to restaurant IDs. This change significantly impacted how the backend was structured.
 
