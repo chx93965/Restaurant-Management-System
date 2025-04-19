@@ -234,7 +234,7 @@ const OrderPage = ({ restaurantId }) => {
                 </div>
 
                 {/* Pending Orders Section */}
-                {pendingOrders.length > 0 && (user.role === "owner" || user.role === "server") && (
+                {pendingOrders.length > 0 && user.role && (user.role === "owner" || user.role === "server") && (
                     <div className="pending-orders mb-6">
                         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Pending Orders</h2>
                         <ul className="space-y-3">
@@ -248,7 +248,7 @@ const OrderPage = ({ restaurantId }) => {
                                     return acc;
                                 }, {}));
                                 const { tax, total } = calculatePrice(summarizedItems);
-                                const tableIndex = tables.findIndex(table => table.id === order.tableId);
+                                const tableIndex = tables.findIndex(table => table.id === order.tableId) + 1;
                                 // Display "Table #1", "Table #2", etc.
                                 const tableNumber = tableIndex >= 0 ? `Table #${tableIndex}` : 'Unknown Table';
                                 return (

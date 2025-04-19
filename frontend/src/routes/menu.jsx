@@ -35,6 +35,9 @@ const Menu = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (!user) {
+            navigate("/login");
+        }
         if (user.role !== "owner") {
             alert("Unauthorized access");
             navigate("/");

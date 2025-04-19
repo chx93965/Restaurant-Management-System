@@ -18,7 +18,6 @@ const RestaurantPage = () => {
 
     // Fetch restaurants
     const fetchRestaurants = async () => {
-        if (!user) return;
         try {
             const fetchedRestaurants = await getOwnedRestaurants(user.id);
             setRestaurants(fetchedRestaurants);
@@ -29,6 +28,9 @@ const RestaurantPage = () => {
 
     useEffect(() => {
         // authorization
+        if (!user) {
+            navigate("/login");
+        }
         if (user.role !== "owner") {
             alert("Unauthorized access");
             navigate("/");
