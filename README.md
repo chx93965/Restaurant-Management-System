@@ -1,10 +1,12 @@
 # Restaurant Management System
 
+
 ## Project Members
 | Name                     | Student Number | Email Address                    |
 |--------------------------|----------------|----------------------------------|
 | Jingxian Hou             | 1001159710     | jingxian.hou@mail.utoronto.ca    |
-| Hanxiao Chang            | 1006341709     | Hanxiao.chang@mail.utoronto.ca   |
+| Hanxiao Chang            | 1006341709     | hanxiao.chang@mail.utoronto.ca   |
+
 
 ## Table of Contents
 - [Proposal](./Proposal.md)
@@ -22,57 +24,37 @@
 
 ## Motivation
 
-The restaurant industry in Toronto's downtown area is fast-paced. Apart from the food quality, the customer satisfaction primarily depends on the effectiveness and efficiency of restaurant services, especially the time and effort spent in ordering food, calling services, checking out, etc. Despite the growth of customer volume and the need for innovative technology, many restaurants still follow a traditional approach to manage customer orders, such as phone call reservations and pen-and-paper order taking. This outdated approach often causes issues like long waiting times, mismanaged reservations, order errors, and lack of streamlined communication between customers and staff. Additionally, restaurant managers face challenges in tracking cash flow and summarizing financial data without digitized balance sheets.
+The restaurant industry in Toronto's downtown area is fast-paced. Apart from the food quality, customer satisfaction primarily depends on the effectiveness and efficiency of restaurant services, especially the time and effort spent in ordering food, calling services, checking out, etc. Despite the growth of customer volume and the need for innovative technology, many restaurants still follow a traditional approach to managing customer orders, such as phone call reservations and pen-and-paper order taking. This often results in misplaced orders, which can negatively impact the restaurant. Additionally, menus are often printed on paper, and when inflation occurs, restaurants must constantly reprint the menu to update prices. This outdated approach also causes issues like long waiting times, mismanaged reservations, order errors, and a lack of streamlined communication between customers and staff. Additionally, restaurant managers face challenges in tracking cash flow and summarizing financial data without digitized balance sheets. There are many applications, such as DoorDash and Uber Eats, created for consumers to make it easy to order food online and have it delivered to their homes. However, there are not many applications for restaurant owners to manage their day-to-day activities, such as updating menus, checking balance sheets, and taking dine-in orders. 
 
-We aim to introduce a new approach in restaurant management to improve the quality of customer services among the restaurant workflow by creating an integrated digital platform for clients, waitstaff, and managers. This application features fast and simplified table reservation, table status monitoring, and online order management. It also improves operational efficiency through cash flow tracking and performance reporting. There are similar applications like Uber Eats, which facilitate takeout orders, while this platform is designed to complement eat-in services in restaurants. 
-
----
-
-There are many applications such as DoorDash and Uber Eats created for consumers to make it easy to order food online and have it delivered to their homes. However, there are not many applications for restaurant owners to manage their day-to-day activities, such as updating menus, checking balance sheets, and taking dine-in orders. 
-
-We recognize that there is a huge market for this, as many small restaurants still rely on waitstaff writing down customers' orders on paper. This often results in misplaced orders, which can negatively impact the restaurant. Additionally, menus are often printed on paper, and when inflation occurs, restaurants must constantly reprint the menu to update prices.
+We recognize that there is a huge market for this, so we aim to introduce a new approach in restaurant management to improve the quality of customer service among the restaurant workflow by creating an integrated digital platform for clients, waitstaff, and managers. This application features fast and simplified table reservation, table status monitoring, and online order management. It also improves operational efficiency through cash flow tracking and performance reporting. There are similar applications like Uber Eats, which facilitate takeout orders, while this platform is designed to complement eat-in services in restaurants. 
 
 
-## Objective and Key Features
+## Objectives
 
-The goal of this project is to develop a management system that handles and records daily restaurant operations. The system consists of three interconnected applications, including client-end, waiter-end, and manager-end, for the purpose of reducing human effort, digitizing paper works, minimizing errors, and improving efficiencies in order processing and financial management.
+The goal of this project is to create an application that helps restaurant owners and employees digitize and simplify their daily operations by handling and recording daily restaurant operations. The system consists of three interconnected applications, including client-end, waiter-end, and manager-end, for the purpose of reducing human effort, digitizing paperwork, minimizing errors, and improving efficiencies in order processing and financial management.
 
----
+For restaurant owners, they can register restaurants and customize menus for each location, including uploading images and updating prices. The menu will be automatically synced with employees. Employees will be able to place orders for dine-in customers and complete the order once payment is made.
 
-The objective of this project is to create an application that helps restaurant owners and employees digitize and simplify their daily operations. 
-
-For owners, they can register restaurants and customize menus for each location, including uploading images and updating prices. The menu will be automatically synced with employees. Employees will be able to place orders for dine-in customers and complete the order once payment is made.
-
-The application is designed to be straightforward and easy to use. It serves as a centralized place to store all activities, eliminating the need to record information on paper and reducing the risk of data loss. Most importantly, balance sheets can be generated easily with a simple button click, so restaurant owners do not need to hire accountants to calculate each order. All information can be retrieved easily with just a few clicks.
+The application is designed to be straightforward to use. It serves as a centralized place to store all activities, eliminating the need to record information on paper and reducing the risk of data loss. Most importantly, balance sheets can be generated easily with a simple button click, so restaurant owners do not need to hire accountants to calculate each order. All information can be retrieved easily with just a few clicks.
 
 
 ## Features
 
-The application offers basic day to day features of the restaurant. The detail explaination of all the feature that app provides is listed below.
-
----
-
 ### Authentication and Authorization
 
-The application allows user to create an account with username and password. When creating account the user has to specify if the account is for owner, employee or customer. Different types of the account can perform different set of actions Owner can manage restaurant by creating restaurant profile such as create restaurant and update the pictures of the restaurant. employees can place orders for the customer.
-
----
+The application allows users to create an account with a username and a password. When creating an account, the user will specify their role, indicating whether the account belongs to the owner, employee or customer, based on which different levels of priorities are assigned with a different set of actions. For example, a restaurant owner can manage their restaurants by registering their names, addresses, and updating the pictures of the restaurant. Employees can place and handle orders for customers. Certain pages have restricted access according to user roles. 
 
 ### Restaurant Management
 
-The feature is only for restaurants owners, owner can create restaurants with name and address as well as the table layout. The layout is simplified by only specifying the number of tables and number of seats for each table. The owner can also upload an profile image for the restaurant. The owner can also generate a balance sheet for a given year. The balance sheet will be downloaded as a csv file listing all the completed order within that calendar year. The owner can also remove the restuarnt from the ownership. Since each owner can own multiple restaurants so the owner can select a resturant to work with. The restuarnt picture as well as the Menu and orders will change based on the selected restaurant.
-
----
+The feature is designed only for restaurant owners who can create restaurants with their names and addresses, as well as the table capacity and layout, where the number of tables and the number of seats for each table are specified. The owner can also upload a profile image for the restaurant, and generate a balance sheet for a specific year. The balance sheet will be downloaded as a CSV file listing all the completed orders within that calendar year. Additionally, the owner can also deregister the restaurant from the system. As multiple restaurants may be registered under an owner, one restaurant will be selected to work on, so that the details of the restaurant picture, the menu, and orders can be reviewed.
 
 ### Menu Management
 
-Owner can also create dish for a restaurant menu. To create a dish owner can specify a dish name, dish description as well as the price. Owner can also upload the image for the dish, this dish will be shown when employee place the order. There will be Edit and Remove buttons for the dish to remove item from the menu or update the basic information of the dish.
-
----
+This feature is also for restaurant owners to create entries for cuisines on the menu by specifying their names, descriptions and prices. Images can be uploaded to showcase the expected appearance of cuisines, which will be shown on the menu. A certain cuisine can be selected as the daily special with potential discounts, this information will be advertised to customers on the home page. 
 
 ### Order Management
 
-Owner and Employee can place the order for the customer. If the Order type is dine in the employee will seect the table that the customer is sat on and all the items from the menu will be shown and employee can add the dish to the order. Once submt the order the pending orders is shwon for each table and the employee can complete the order once the purchase is completed. To make employee’s work simplay the toatal price for each peniding order is also shown.
+This is the entry point for customers to place their orders. A table number will be required if customers choose to dine in. The restaurant owner and employees can place the order on behalf of customers. All submitted orders are visible to the owner and waitstaff, with the option to be completed once customers have completed their payments. Multiple orders created from the same table will be merged. 
 
 ## User Guide
 
@@ -550,13 +532,22 @@ Additionally, I developed features for restaurant and menu management. This incl
 
 To enhance user experience, I also implemented small but impactful improvements, such as redirecting users to the login page if they are not authenticated, regardless of which action they try to take. Furthermore, any updates to restaurant metadata or images are reflected in real-time on the UI without requiring a page refresh.
 
+### Hanxiao Chang
+
+I was in charge of designing the frontend structure by mapping webpages to their routes, essential components to certain pages, and service providers to the backend APIs. I also specified the transactions between webpages, and particular data flows regarding user experience. 
+
+I built up the order page with functionalities of showcasing and selecting cuisines, modifying the quantities, and generating summaries for the bills. 
+
+I established the user authorization logic, where access to certain pages, or certain elements of a page, is restricted based on user roles, for which I created certain entries in the signup process. 
+
+I further organized the user interface in terms of the page layout, styles, appearance, and visible behaviours of page elements, including links, buttons, and forms.
+
+
 ## Lessons Learned
 
-One important lesson learned from building this application is properly designing the system architecture before jumping into implementation. Without a solid design, making changes later—especially to the database schema—can become extremely difficult and time-consuming.
+One important lesson learned from building this application is to properly design the system architecture before jumping into implementation. Without a solid design, making changes later, especially to the database schema, can become extremely difficult and time-consuming. For example, in the initial design, the `user` table included a field to indicate the restaurant that a user owns. Later, we realized that an owner may manage multiple restaurants. This required us to normalize the schema and introduce a new table to map users to restaurant IDs. This change significantly impacted how the backend was structured. If the APIs and schema had been carefully planned from the beginning, the development process would have been more straightforward and less prone to refactoring.
 
-For example, in the initial design, the `user` table included a field to indicate the restaurant a user owns. Later, we realized that an owner may manage multiple restaurants. This required us to normalize the schema and introduce a new table to map users to restaurant IDs. This change significantly impacted how the backend was structured.
-
-If the APIs and schema had been carefully planned from the beginning, the development process would have been more straightforward and less prone to refactoring.
+Additionally, the order of development matters in terms of the priorities of frontend and backend implementations. A good practice we applied in this project is to schedule the entire development phase in three steps, where the basic CRUD operations were established first, then we jumped into designing all the webpages, from which the data flow became clearer and more requirements from the backend emerged, in such a way the backend functionalities could be further enriched. 
 
 ## Conclusion
 
