@@ -92,6 +92,7 @@ Other actions include:
 - A **Select** button that allows the Owner to choose the restaurant to work with.
 
 Once a restaurant is selected, this choice will affect other sections such as **Menu** and **Order**. For example, if you select "KFC", clicking on the **Menu** tab will display the menu items for the KFC restaurant only.
+![Alt Text](https://github.com/chx93965/Restaurant-Management-System/blob/main/frontend/static/rest_management.png)
 
 ### Menu Management
 
@@ -100,7 +101,12 @@ Once the owner selects a restaurant, they can begin making changes to the restau
 After a dish is added, the owner has the option to either remove it from the menu or update its basic information—such as the price—by clicking the **Edit** button. Additionally, the owner can upload an image for the dish; otherwise, a default picture will be shown.
 
 This step is crucial, as customers can only start placing orders once the menu has been created.
+![Alt Text](https://github.com/chx93965/Restaurant-Management-System/blob/main/frontend/static/menu.png)
 
+### Order Management
+
+Both customers and servers can place orders. When accessing the order page, the menu for the selected restaurant will be displayed, including the price, images, and description of each dish. Users can choose between dine-in or takeout options. If dining in, a table must be selected. Users can order as many dishes as they want for a table, and all dish items for the same table will be grouped into one pending bill (note: these will not be added to the completed orders until finalized). Servers can complete the order once the customer makes the payment, after which the order will no longer be visible in the pending list. However, if the restaurant owner decides to download the balance sheet, the CSV file will include all completed orders and their corresponding payments.
+![Alt Text](https://github.com/chx93965/Restaurant-Management-System/blob/main/frontend/static/order.png)
 
 ## Tech Stacks
 
